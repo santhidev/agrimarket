@@ -1,0 +1,35 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/AgriMarket.Application.Contracts/AgriMarket.Application.Contracts.csproj" />
+    <Project Path="src/AgriMarket.Application/AgriMarket.Application.csproj" />
+    
+    <Project Path="src/AgriMarket.Blazor.Client/AgriMarket.Blazor.Client.csproj" />
+    
+    
+    
+    
+    
+    
+    <Project Path="src/AgriMarket.Blazor/AgriMarket.Blazor.csproj" />
+    <Project Path="src/AgriMarket.DbMigrator/AgriMarket.DbMigrator.csproj" />
+    <Project Path="src/AgriMarket.Domain.Shared/AgriMarket.Domain.Shared.csproj" />
+    <Project Path="src/AgriMarket.Domain/AgriMarket.Domain.csproj" />
+    <Project Path="src/AgriMarket.EntityFrameworkCore/AgriMarket.EntityFrameworkCore.csproj" />
+    <Project Path="src/AgriMarket.HttpApi.Client/AgriMarket.HttpApi.Client.csproj" />
+    
+    <Project Path="src/AgriMarket.HttpApi.Host/AgriMarket.HttpApi.Host.csproj" />
+    <Project Path="src/AgriMarket.HttpApi/AgriMarket.HttpApi.csproj" />
+    
+    
+    
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="test/AgriMarket.Application.Tests/AgriMarket.Application.Tests.csproj" />
+    <Project Path="test/AgriMarket.Domain.Tests/AgriMarket.Domain.Tests.csproj" />
+    <Project Path="test/AgriMarket.EntityFrameworkCore.Tests/AgriMarket.EntityFrameworkCore.Tests.csproj" />
+    <Project Path="test/AgriMarket.HttpApi.Client.ConsoleTestApp/AgriMarket.HttpApi.Client.ConsoleTestApp.csproj" />
+    
+    <Project Path="test/AgriMarket.TestBase/AgriMarket.TestBase.csproj" />
+    
+  </Folder>
+</Solution>
