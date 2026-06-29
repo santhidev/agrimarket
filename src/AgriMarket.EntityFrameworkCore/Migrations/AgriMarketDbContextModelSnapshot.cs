@@ -804,6 +804,9 @@ namespace AgriMarket.Migrations
                         .HasDefaultValue(0)
                         .HasColumnName("AccessFailedCount");
 
+                    b.Property<int>("BuyerScore")
+                        .HasColumnType("integer");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .IsRequired()
@@ -847,9 +850,19 @@ namespace AgriMarket.Migrations
                         .HasColumnType("text")
                         .HasColumnName("ExtraProperties");
 
+                    b.Property<string>("FcmToken")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<Guid?>("HubId")
+                        .HasColumnType("uuid");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean")
                         .HasColumnName("IsActive");
+
+                    b.Property<bool>("IsAdmin")
+                        .HasColumnType("boolean");
 
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
@@ -862,6 +875,15 @@ namespace AgriMarket.Migrations
                         .HasColumnType("boolean")
                         .HasDefaultValue(false)
                         .HasColumnName("IsExternal");
+
+                    b.Property<bool>("IsHubStaff")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsRider")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("KycStatus")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("timestamp without time zone")
@@ -931,6 +953,9 @@ namespace AgriMarket.Migrations
                         .HasColumnType("character varying(256)")
                         .HasColumnName("SecurityStamp");
 
+                    b.Property<int>("SellerScore")
+                        .HasColumnType("integer");
+
                     b.Property<bool>("ShouldChangePasswordOnNextLogin")
                         .HasColumnType("boolean");
 
@@ -942,6 +967,9 @@ namespace AgriMarket.Migrations
                     b.Property<Guid?>("TenantId")
                         .HasColumnType("uuid")
                         .HasColumnName("TenantId");
+
+                    b.Property<int>("Tier")
+                        .HasColumnType("integer");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .ValueGeneratedOnAdd()

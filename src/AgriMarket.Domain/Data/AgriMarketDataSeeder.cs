@@ -1,10 +1,11 @@
 using System.Threading.Tasks;
+using AgriMarket.Users;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Guids;
 using Volo.Abp.Identity;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace AgriMarket.Data;
 
@@ -52,9 +53,11 @@ public class AgriMarketDataSeeder : IDataSeedContributor, ITransientDependency
             adminPhone,
             adminPhone + "@agrimarket.local"
         );
-
         adminUser.SetIsActive(true);
-        // Set is_admin flag (custom property or role)
+
+        // Store the admin flag as an extra property (see AppUser extensions).
+        // This resolves the TODO that was previously left in the seeder.
+        adminUser.SetIsAdmin(true);
 
         var result = await _userManager.CreateAsync(adminUser, "Admin@123456");
         if (!result.Succeeded)
@@ -62,6 +65,10 @@ public class AgriMarketDataSeeder : IDataSeedContributor, ITransientDependency
             _logger.LogError("Failed to create admin user: {Errors}", string.Join(", ", result.Errors));
             return;
         }
+
+        // Confirm the phone number via the manager (setters are protected).
+        // The phone is already in UserName (phone-as-username convention).
+        await _userManager.SetPhoneNumberAsync(adminUser, adminPhone);
 
         // Assign admin role
         await _userManager.AddToRoleAsync(adminUser, "admin");

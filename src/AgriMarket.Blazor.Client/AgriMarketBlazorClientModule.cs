@@ -1,10 +1,10 @@
 using System;
 using System.Net.Http;
-using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+using AgriMarket.Blazor.Client.Auth;
 using AgriMarket.Blazor.Client.Menus;
-using OpenIddict.Abstractions;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.AspNetCore.Components.Web.Theming.MudBlazor.Routing;
 using Volo.Abp.AspNetCore.Components.WebAssembly.MudBlazorBasicTheme;
 using Volo.Abp.Autofac.WebAssembly;
@@ -30,10 +30,9 @@ public class AgriMarketBlazorClientModule : AbpModule
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
         var environment = context.Services.GetSingletonInstance<IWebAssemblyHostEnvironment>();
-        var builder = context.Services.GetSingletonInstance<WebAssemblyHostBuilder>();
 
-        ConfigureAuthentication(builder);
-        ConfigureHttpClient(context, environment);
+        ConfigureAuthentication(context.Services);
+        ConfigureHttpClient(context.Services, environment);
         ConfigureRouter(context);
         ConfigureMenu(context);
 
@@ -56,27 +55,39 @@ public class AgriMarketBlazorClientModule : AbpModule
         });
     }
 
-
-    private static void ConfigureAuthentication(WebAssemblyHostBuilder builder)
+    /// <summary>
+    /// Token-based auth: the phone-OTP flow issues a plain JWT (no OIDC
+    /// redirect). A custom <see cref="AuthenticationStateProvider" /> reads
+    /// the token from localStorage and an HTTP handler attaches it to API calls.
+    /// </summary>
+    private static void ConfigureAuthentication(IServiceCollection services)
     {
-        builder.Services.AddOidcAuthentication(options =>
-        {
-            builder.Configuration.Bind("AuthServer", options.ProviderOptions);
-            options.UserOptions.NameClaim = OpenIddictConstants.Claims.Name;
-            options.UserOptions.RoleClaim = OpenIddictConstants.Claims.Role;
-
-            options.ProviderOptions.DefaultScopes.Add("AgriMarket");
-            options.ProviderOptions.DefaultScopes.Add("roles");
-            options.ProviderOptions.DefaultScopes.Add("email");
-            options.ProviderOptions.DefaultScopes.Add("phone");
-        });
+        services.AddAuthorizationCore();
+        services.AddScoped<ITokenStorage, LocalStorageTokenStorage>();
+        services.AddScoped<AgriMarketAuthenticationStateProvider>();
+        services.AddScoped<AuthenticationStateProvider>(sp =>
+            sp.GetRequiredService<AgriMarketAuthenticationStateProvider>());
     }
 
-    private static void ConfigureHttpClient(ServiceConfigurationContext context, IWebAssemblyHostEnvironment environment)
+    private static void ConfigureHttpClient(IServiceCollection services, IWebAssemblyHostEnvironment environment)
     {
-        context.Services.AddTransient(sp => new HttpClient
+        // ABP dynamic client proxies resolve the API base URL from
+        // RemoteServices:Default:BaseUrl. Register the auth handler so every
+        // proxied call carries the JWT.
+        services.AddTransient<AuthenticatingHttpMessageHandler>();
+        services.AddHttpClient("AgriMarket.Api")
+            .AddHttpMessageHandler<AuthenticatingHttpMessageHandler>();
+
+        // Generic HttpClient for ad-hoc calls (base = the WASM host origin).
+        services.AddTransient(sp =>
         {
-            BaseAddress = new Uri(environment.BaseAddress)
+            var handler = sp.GetRequiredService<AuthenticatingHttpMessageHandler>();
+            handler.InnerHandler = new HttpClientHandler();
+            return new HttpClient(handler)
+            {
+                BaseAddress = new Uri(environment.BaseAddress)
+            };
         });
     }
 }
+

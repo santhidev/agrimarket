@@ -1,0 +1,148 @@
+@page "/authentication/login"
+@using AgriMarket.Auth
+@using AgriMarket.Blazor.Client.Auth
+@using MudBlazor
+@inject AgriMarket.Auth.IAuthAppService AuthAppService
+@inject AgriMarketAuthenticationStateProvider AuthStateProvider
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+@inherits AgriMarket.Blazor.Client.AgriMarketComponentBase
+
+<MudContainer MaxWidth="MaxWidth.ExtraSmall" Class="mt-8">
+    <MudPaper Class="pa-8" Elevation="4">
+        <MudText Typo="Typo.h5" Align="Align.Center" Class="mb-1" Color="Color.Primary">
+            AgriMarket
+        </MudText>
+        <MudText Typo="Typo.subtitle1" Align="Align.Center" Class="mb-6">
+            เข้าสู่ระบบ
+        </MudText>
+
+        @if (_step == LoginStep.Phone)
+        {
+            <MudTextField T="string"
+                          @bind-Value="_phoneNumber"
+                          Label="เบอร์โทรศัพท์"
+                          Placeholder="0812345678"
+                          Variant="Variant.Outlined"
+                          Class="mb-4"
+                          Immediate="true"
+                          Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Filled.Phone" />
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       FullWidth="true"
+                       Size="Size.Large"
+                       Class="mb-2"
+                       OnClick="RequestOtp"
+                       Disabled="@( _loading || string.IsNullOrWhiteSpace(_phoneNumber) )">
+                ขอรหัสยืนยัน
+            </MudButton>
+        }
+
+        @if (_step == LoginStep.Otp)
+        {
+            <MudText Align="Align.Center" Class="mb-4">
+                <MudText Typo="Typo.body1">กรอกรหัสยืนยัน 6 หลักที่ได้รับ</MudText>
+                <br />
+                <MudText Typo="Typo.body2" Color="Color.Surface">(โหมดทดสอบ: ใช้ <b>000000</b>)</MudText>
+            </MudText>
+
+            <MudTextField T="string"
+                          @bind-Value="_code"
+                          Label="รหัสยืนยัน (OTP)"
+                          Variant="Variant.Outlined"
+                          Class="mb-4"
+                          Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Filled.Lock"
+                          MaxLength="6" />
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       FullWidth="true"
+                       Size="Size.Large"
+                       Class="mb-2"
+                       OnClick="VerifyOtp"
+                       Disabled="@( _loading || string.IsNullOrWhiteSpace(_code) )">
+                เข้าสู่ระบบ
+            </MudButton>
+            <MudButton Variant="Variant.Text"
+                       FullWidth="true"
+                       OnClick="BackToPhone">
+                ย้อนกลับ
+            </MudButton>
+        }
+
+        @if (_loading)
+        {
+            <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="mt-4" />
+        }
+    </MudPaper>
+</MudContainer>
+
+@code {
+    private enum LoginStep { Phone, Otp }
+
+    private LoginStep _step = LoginStep.Phone;
+    private string _phoneNumber = string.Empty;
+    private string _code = string.Empty;
+    private bool _loading;
+
+    private async Task RequestOtp()
+    {
+        _loading = true;
+        try
+        {
+            var result = await AuthAppService.RequestOtpAsync(
+                new RequestOtpInputDto { PhoneNumber = _phoneNumber });
+
+            // In test mode the server returns the code so the client can display
+            // it (no SMS gateway in MVP). Pre-fill it for convenience.
+            if (!string.IsNullOrEmpty(result.TestCode))
+            {
+                _code = result.TestCode;
+                Snackbar.Add("โหมดทดสอบ: ใช้รหัส 000000", Severity.Info);
+            }
+            _step = LoginStep.Otp;
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"เกิดข้อผิดพลาด: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+    private async Task VerifyOtp()
+    {
+        _loading = true;
+        try
+        {
+            var result = await AuthAppService.VerifyOtpAsync(
+                new VerifyOtpInputDto
+                {
+                    PhoneNumber = _phoneNumber,
+                    Code = _code,
+                    FcmToken = null
+                });
+
+            await AuthStateProvider.MarkUserAsAuthenticatedAsync(result.AccessToken);
+            Snackbar.Add("เข้าสู่ระบบสำเร็จ", Severity.Success);
+            Navigation.NavigateTo("/", forceLoad: true);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"เข้าสู่ระบบไม่สำเร็จ: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+    private void BackToPhone()
+    {
+        _step = LoginStep.Phone;
+        _code = string.Empty;
+    }
+}

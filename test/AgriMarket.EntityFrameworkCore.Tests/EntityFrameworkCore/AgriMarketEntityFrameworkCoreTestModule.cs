@@ -42,6 +42,26 @@ public class AgriMarketEntityFrameworkCoreTestModule : AbpModule
         });
         context.Services.AddAlwaysDisableUnitOfWorkTransaction();
 
+        // The OTP service uses IDistributedCache. ABP's Redis cache module
+        // (AbpCachingStackExchangeRedisModule) is active here, so point it at
+        // a Redis instance for tests. Replace with an in-memory cache if you
+        // want fully isolated tests (no Redis dependency).
+        context.Services.Configure<Microsoft.Extensions.Caching.StackExchangeRedis.RedisCacheOptions>(options =>
+        {
+            options.Configuration = "localhost:6379";
+            options.InstanceName = "AgriMarket.Tests";
+        });
+
+        // JWT issuance needs a signing key; supply a test key (must be >= 32
+        // chars for HS256). OTP test mode is forced in tests.
+        Configure<AgriMarket.Auth.JwtOptions>(options =>
+        {
+            options.Issuer = "AgriMarket.Tests";
+            options.Audience = "AgriMarket.Tests";
+            options.SigningKey = "AgriMarket_Tests_Signing_Key_At_Least_32_Chars!";
+            options.ExpiresMinutes = 60;
+        });
+
         ConfigureInMemorySqlite(context.Services);
     }
 

@@ -92,6 +92,33 @@ public class AgriMarketHttpApiHostModule : AbpModule
 
     private void ConfigureAuthentication(ServiceConfigurationContext context)
     {
+        var configuration = context.Services.GetConfiguration();
+
+        // Phone-OTP tokens are issued as plain JWTs (HS256) by AuthAppService.
+        // Register a JWT bearer scheme as the default so API endpoints accept
+        // those tokens. OpenIddict's validation handler is registered by the
+        // AbpAccountWebOpenIddictModule and remains available as a secondary
+        // scheme for the Blazor/Swagger OIDC authorization-code flow.
+        context.Services
+            .AddAuthentication("AgriMarketJwt")
+            .AddJwtBearer("AgriMarketJwt", options =>
+            {
+                options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = configuration["Jwt:Issuer"],
+                    ValidateAudience = true,
+                    ValidAudience = configuration["Jwt:Audience"],
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(
+                        System.Text.Encoding.UTF8.GetBytes(configuration["Jwt:SigningKey"]!)),
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.FromMinutes(1),
+                    NameClaimType = System.Security.Claims.ClaimTypes.Name,
+                    RoleClaimType = System.Security.Claims.ClaimTypes.Role
+                };
+            });
+
         context.Services.ForwardIdentityAuthenticationForBearer(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
         context.Services.Configure<AbpClaimsPrincipalFactoryOptions>(options =>
         {

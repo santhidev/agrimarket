@@ -1,10 +1,18 @@
 @using Volo.Abp.AspNetCore.Components.Web.MudBlazorBasicTheme.Themes.Basic
 @using Volo.Abp.AspNetCore.Components.WebAssembly.WebApp
+@using Microsoft.AspNetCore.Components.Authorization
+@inject NavigationManager Navigation
 <Router AppAssembly="typeof(Program).Assembly" AdditionalAssemblies="WebAppAdditionalAssembliesHelper.GetAssemblies<AgriMarketBlazorClientModule>()">
     <Found Context="routeData">
         <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(MainLayout)">
             <NotAuthorized>
-                <RedirectToLogin />
+                @* Redirect unauthenticated users to the phone-OTP login page.
+                   The token-based auth provider (no OIDC) keeps the JWT in
+                   localStorage, so a plain navigation is sufficient. *@
+                @{
+                    var returnUrl = Uri.EscapeDataString(Navigation.ToBaseRelativePath(Navigation.Uri));
+                    Navigation.NavigateTo($"/authentication/login", forceLoad: false);
+                }
             </NotAuthorized>
         </AuthorizeRouteView>
     </Found>

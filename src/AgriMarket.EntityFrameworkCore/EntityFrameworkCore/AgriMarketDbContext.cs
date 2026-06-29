@@ -74,6 +74,11 @@ public class AgriMarketDbContext :
         builder.ConfigureFeatureManagement();
         builder.ConfigureTenantManagement();
 
+        /* AgriMarket extends IdentityUser via ObjectExtensionManager
+         * (see Domain.Shared/AgriMarketModuleExtensionConfigurator).
+         * The extra columns map automatically through ConfigureIdentity() above
+         * plus the EF mapping in AgriMarketEfCoreEntityExtensionMappings. */
+
         /* Configure your own tables/entities inside here */
 
         //builder.Entity<YourEntity>(b =>

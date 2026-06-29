@@ -63,6 +63,10 @@ public class AgriMarketDomainModule : AbpModule
             options.IsEnabled = MultiTenancyConsts.IsEnabled;
         });
 
+        // OTP options bind from the "Otp" config section (default: test mode on).
+        Configure<AgriMarket.Auth.AgriMarketOtpOptions>(
+            context.Services.GetConfiguration().GetSection("Otp"));
+
 #if DEBUG
         context.Services.Replace(ServiceDescriptor.Singleton<IEmailSender, NullEmailSender>());
 #endif
