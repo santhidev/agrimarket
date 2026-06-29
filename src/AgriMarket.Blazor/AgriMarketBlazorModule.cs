@@ -49,6 +49,7 @@ public class AgriMarketBlazorModule : AbpModule
         }
 
         app.UseHttpsRedirection();
+        app.UseStaticFiles();
         app.MapAbpStaticAssets();
         app.UseRouting();
         app.UseAntiforgery();

@@ -1,9 +1,12 @@
-﻿namespace AgriMarket.Permissions;
+namespace AgriMarket.Permissions;
 
 public static class AgriMarketPermissions
 {
     public const string GroupName = "AgriMarket";
 
-    //Add your own permission names. Example:
-    //public const string MyPermission1 = GroupName + ".MyPermission1";
+    public static class Products
+    {
+        public const string Default = GroupName + ".Products";
+        public const string Manage = GroupName + ".Products.Manage";
+    }
 }

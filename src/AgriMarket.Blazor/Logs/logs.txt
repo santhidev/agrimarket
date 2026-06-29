@@ -2045,3 +2045,192 @@
 2026-06-29 17:13:01.467 +07:00 [INF] Sending file. Request path: '_content/Volo.Abp.AspNetCore.Components.WebAssembly.Theming.MudBlazor/libs/fontawesome/webfonts/fa-solid-900.woff2'. Physical path: 'C:\Users\santh\.nuget\packages\volo.abp.aspnetcore.components.webassembly.theming.mudblazor\10.4.1\staticwebassets\libs\fontawesome\webfonts\fa-solid-900.woff2'
 2026-06-29 17:13:01.467 +07:00 [INF] Executed endpoint 'Microsoft.AspNetCore.Routing.RouteEndpoint'
 2026-06-29 17:13:01.467 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44307/_content/Volo.Abp.AspNetCore.Components.WebAssembly.Theming.MudBlazor/libs/fontawesome/webfonts/fa-solid-900.woff2 - 200 156496 font/woff2 13.3563ms
+2026-06-30 02:10:19.126 +07:00 [INF] Starting web host.
+2026-06-30 02:10:19.975 +07:00 [DBG] Loaded ABP modules:
+2026-06-30 02:10:19.976 +07:00 [DBG] - AgriMarket.Blazor.AgriMarketBlazorModule
+2026-06-30 02:10:19.976 +07:00 [DBG]   - Volo.Abp.Autofac.AbpAutofacModule
+2026-06-30 02:10:19.976 +07:00 [DBG]     - Volo.Abp.Castle.AbpCastleCoreModule
+2026-06-30 02:10:19.976 +07:00 [DBG]   - Volo.Abp.AspNetCore.Mvc.UI.Bundling.AbpAspNetCoreMvcUiBundlingModule
+2026-06-30 02:10:19.976 +07:00 [DBG]     - Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.AbpAspNetCoreMvcUiBootstrapModule
+2026-06-30 02:10:19.976 +07:00 [DBG]       - Volo.Abp.AspNetCore.Mvc.UI.AbpAspNetCoreMvcUiModule
+2026-06-30 02:10:19.976 +07:00 [DBG]         - Volo.Abp.AspNetCore.Mvc.AbpAspNetCoreMvcModule
+2026-06-30 02:10:19.976 +07:00 [DBG]           - Volo.Abp.AspNetCore.AbpAspNetCoreModule
+2026-06-30 02:10:19.976 +07:00 [DBG]             - Volo.Abp.Auditing.AbpAuditingModule
+2026-06-30 02:10:19.976 +07:00 [DBG]               - Volo.Abp.Data.AbpDataModule
+2026-06-30 02:10:19.976 +07:00 [DBG]                 - Volo.Abp.ObjectExtending.AbpObjectExtendingModule
+2026-06-30 02:10:19.976 +07:00 [DBG]                   - Volo.Abp.Localization.AbpLocalizationAbstractionsModule
+2026-06-30 02:10:19.976 +07:00 [DBG]                   - Volo.Abp.Validation.AbpValidationAbstractionsModule
+2026-06-30 02:10:19.976 +07:00 [DBG]                 - Volo.Abp.Uow.AbpUnitOfWorkModule
+2026-06-30 02:10:19.976 +07:00 [DBG]                 - Volo.Abp.EventBus.Abstractions.AbpEventBusAbstractionsModule
+2026-06-30 02:10:19.976 +07:00 [DBG]               - Volo.Abp.Json.AbpJsonModule
+2026-06-30 02:10:19.976 +07:00 [DBG]                 - Volo.Abp.Json.SystemTextJson.AbpJsonSystemTextJsonModule
+2026-06-30 02:10:19.976 +07:00 [DBG]                   - Volo.Abp.Json.AbpJsonAbstractionsModule
+2026-06-30 02:10:19.976 +07:00 [DBG]                   - Volo.Abp.Timing.AbpTimingModule
+2026-06-30 02:10:19.976 +07:00 [DBG]                     - Volo.Abp.Localization.AbpLocalizationModule
+2026-06-30 02:10:19.976 +07:00 [DBG]                       - Volo.Abp.VirtualFileSystem.AbpVirtualFileSystemModule
+2026-06-30 02:10:19.976 +07:00 [DBG]                       - Volo.Abp.Settings.AbpSettingsModule
+2026-06-30 02:10:19.976 +07:00 [DBG]                         - Volo.Abp.Security.AbpSecurityModule
+2026-06-30 02:10:19.976 +07:00 [DBG]                       - Volo.Abp.Threading.AbpThreadingModule
+2026-06-30 02:10:19.976 +07:00 [DBG]               - Volo.Abp.MultiTenancy.AbpMultiTenancyModule
+2026-06-30 02:10:19.976 +07:00 [DBG]                 - Volo.Abp.MultiTenancy.AbpMultiTenancyAbstractionsModule
+2026-06-30 02:10:19.976 +07:00 [DBG]               - Volo.Abp.Auditing.AbpAuditingContractsModule
+2026-06-30 02:10:19.976 +07:00 [DBG]             - Volo.Abp.Http.AbpHttpModule
+2026-06-30 02:10:19.976 +07:00 [DBG]               - Volo.Abp.Http.AbpHttpAbstractionsModule
+2026-06-30 02:10:19.976 +07:00 [DBG]               - Volo.Abp.Minify.AbpMinifyModule
+2026-06-30 02:10:19.976 +07:00 [DBG]             - Volo.Abp.Authorization.AbpAuthorizationModule
+2026-06-30 02:10:19.976 +07:00 [DBG]               - Volo.Abp.Authorization.AbpAuthorizationAbstractionsModule
+2026-06-30 02:10:19.976 +07:00 [DBG]             - Volo.Abp.Validation.AbpValidationModule
+2026-06-30 02:10:19.976 +07:00 [DBG]             - Volo.Abp.ExceptionHandling.AbpExceptionHandlingModule
+2026-06-30 02:10:19.976 +07:00 [DBG]             - Volo.Abp.AspNetCore.AbpAspNetCoreAbstractionsModule
+2026-06-30 02:10:19.976 +07:00 [DBG]           - Volo.Abp.ApiVersioning.AbpApiVersioningAbstractionsModule
+2026-06-30 02:10:19.976 +07:00 [DBG]           - Volo.Abp.AspNetCore.Mvc.AbpAspNetCoreMvcContractsModule
+2026-06-30 02:10:19.976 +07:00 [DBG]             - Volo.Abp.Application.AbpDddApplicationContractsModule
+2026-06-30 02:10:19.976 +07:00 [DBG]           - Volo.Abp.UI.Navigation.AbpUiNavigationModule
+2026-06-30 02:10:19.976 +07:00 [DBG]             - Volo.Abp.UI.AbpUiModule
+2026-06-30 02:10:19.976 +07:00 [DBG]             - Volo.Abp.Features.AbpFeaturesModule
+2026-06-30 02:10:19.976 +07:00 [DBG]           - Volo.Abp.GlobalFeatures.AbpGlobalFeaturesModule
+2026-06-30 02:10:19.976 +07:00 [DBG]           - Volo.Abp.Application.AbpDddApplicationModule
+2026-06-30 02:10:19.976 +07:00 [DBG]             - Volo.Abp.Domain.AbpDddDomainModule
+2026-06-30 02:10:19.976 +07:00 [DBG]               - Volo.Abp.EventBus.AbpEventBusModule
+2026-06-30 02:10:19.976 +07:00 [DBG]                 - Volo.Abp.Guids.AbpGuidsModule
+2026-06-30 02:10:19.976 +07:00 [DBG]                 - Volo.Abp.BackgroundWorkers.AbpBackgroundWorkersModule
+2026-06-30 02:10:19.976 +07:00 [DBG]                 - Volo.Abp.DistributedLocking.AbpDistributedLockingAbstractionsModule
+2026-06-30 02:10:19.976 +07:00 [DBG]               - Volo.Abp.ObjectMapping.AbpObjectMappingModule
+2026-06-30 02:10:19.976 +07:00 [DBG]               - Volo.Abp.Specifications.AbpSpecificationsModule
+2026-06-30 02:10:19.976 +07:00 [DBG]               - Volo.Abp.Caching.AbpCachingModule
+2026-06-30 02:10:19.976 +07:00 [DBG]                 - Volo.Abp.Serialization.AbpSerializationModule
+2026-06-30 02:10:19.976 +07:00 [DBG]               - Volo.Abp.Domain.AbpDddDomainSharedModule
+2026-06-30 02:10:19.976 +07:00 [DBG]     - Volo.Abp.AspNetCore.Bundling.AbpAspNetCoreBundlingModule
+2026-06-30 02:10:19.976 +07:00 [DBG]       - Volo.Abp.AspNetCore.Mvc.UI.Bundling.AbpAspNetCoreMvcUiBundlingAbstractionsModule
+2026-06-30 02:10:19.976 +07:00 [DBG]   - Volo.Abp.AspNetCore.Components.WebAssembly.MudBlazorBasicTheme.Bundling.AbpAspNetCoreComponentsWebAssemblyMudBlazorBasicThemeBundlingModule
+2026-06-30 02:10:19.976 +07:00 [DBG]     - Volo.Abp.AspNetCore.Components.WebAssembly.Theming.MudBlazor.Bundling.AbpAspNetCoreComponentsWebAssemblyThemingMudBlazorBundlingModule
+2026-06-30 02:10:20.421 +07:00 [INF] User profile is available. Using 'C:\Users\santh\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-06-30 02:10:23.352 +07:00 [INF] Initialized all ABP modules.
+2026-06-30 02:10:23.471 +07:00 [INF] Now listening on: https://localhost:44307
+2026-06-30 02:10:23.471 +07:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-06-30 02:10:23.471 +07:00 [INF] Hosting environment: Development
+2026-06-30 02:10:23.471 +07:00 [INF] Content root path: C:\Works\agrimarket\src\AgriMarket.Blazor
+2026-06-30 02:11:24.106 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44307/ - null null
+2026-06-30 02:11:24.121 +07:00 [INF] The 'WebRootPath' is not set, The 'CheckLibs' feature not needed.
+2026-06-30 02:11:24.472 +07:00 [INF] Executing endpoint '/ (/)'
+2026-06-30 02:11:24.573 +07:00 [INF] Executed endpoint '/ (/)'
+2026-06-30 02:11:24.577 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44307/ - 200 null text/html; charset=utf-8 472.9159ms
+2026-06-30 02:11:24.605 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44307/global.css - null null
+2026-06-30 02:11:24.605 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44307/AgriMarket.Blazor.Client.styles.css - null null
+2026-06-30 02:11:24.605 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44307/main.css - null null
+2026-06-30 02:11:24.605 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44307/_framework/blazor.web.js - null null
+2026-06-30 02:11:24.605 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44307/global.js - null null
+2026-06-30 02:11:24.614 +07:00 [INF] Executing endpoint 'Microsoft.AspNetCore.Routing.RouteEndpoint'
+2026-06-30 02:11:24.614 +07:00 [INF] Executing endpoint 'Microsoft.AspNetCore.Routing.RouteEndpoint'
+2026-06-30 02:11:24.614 +07:00 [INF] Executing endpoint 'Microsoft.AspNetCore.Routing.RouteEndpoint'
+2026-06-30 02:11:24.622 +07:00 [INF] Sending file. Request path: 'main.css'. Physical path: 'C:\Works\agrimarket\src\AgriMarket.Blazor.Client\obj\Debug\net10.0\compressed\2peaqad3ds-{0}-sqxwlqvw23-sqxwlqvw23.gz'
+2026-06-30 02:11:24.622 +07:00 [INF] Executed endpoint 'Microsoft.AspNetCore.Routing.RouteEndpoint'
+2026-06-30 02:11:24.623 +07:00 [INF] Sending file. Request path: 'AgriMarket.Blazor.Client.styles.css'. Physical path: 'C:\Works\agrimarket\src\AgriMarket.Blazor.Client\obj\Debug\net10.0\compressed\0us7potd22-{0}-fikdb2xbym-fikdb2xbym.gz'
+2026-06-30 02:11:24.623 +07:00 [INF] Executed endpoint 'Microsoft.AspNetCore.Routing.RouteEndpoint'
+2026-06-30 02:11:24.623 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44307/main.css - 200 1302 text/css 18.5409ms
+2026-06-30 02:11:24.623 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44307/AgriMarket.Blazor.Client.styles.css - 200 317 text/css 18.2263ms
+2026-06-30 02:11:24.631 +07:00 [INF] Sending file. Request path: '_framework/blazor.web.js'. Physical path: 'C:\Works\agrimarket\src\AgriMarket.Blazor\obj\Debug\net10.0\compressed\gsdvtoq73s-{0}-ne14ti1q68-ne14ti1q68.gz'
+2026-06-30 02:11:24.631 +07:00 [INF] Sending file. Request path: '/global.js'. Physical path: 'N/A'
+2026-06-30 02:11:24.632 +07:00 [INF] Executed endpoint 'Microsoft.AspNetCore.Routing.RouteEndpoint'
+2026-06-30 02:11:24.633 +07:00 [INF] Sending file. Request path: '/global.css'. Physical path: 'N/A'
+2026-06-30 02:11:24.634 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44307/global.js - 200 368649 application/javascript 29.4761ms
+2026-06-30 02:11:24.634 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44307/global.css - 200 845545 text/css 30.0241ms
+2026-06-30 02:11:24.634 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44307/_framework/blazor.web.js - 200 55600 text/javascript 30.0223ms
+2026-06-30 02:11:24.965 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44307/_framework/Microsoft.DotNet.HotReload.WebAssembly.Browser.99zm1jdh75.lib.module.js - null null
+2026-06-30 02:11:24.970 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44307/favicon.ico - null null
+2026-06-30 02:11:25.055 +07:00 [INF] Executing endpoint 'Microsoft.AspNetCore.Routing.RouteEndpoint'
+2026-06-30 02:11:25.055 +07:00 [INF] Executing endpoint 'Microsoft.AspNetCore.Routing.RouteEndpoint'
+2026-06-30 02:11:25.059 +07:00 [INF] Sending file. Request path: '_framework/Microsoft.DotNet.HotReload.WebAssembly.Browser.99zm1jdh75.lib.module.js'. Physical path: 'C:\Works\agrimarket\src\AgriMarket.Blazor.Client\obj\Debug\net10.0\compressed\1zeac0h05c-{0}-99zm1jdh75-99zm1jdh75.gz'
+2026-06-30 02:11:25.059 +07:00 [INF] Executed endpoint 'Microsoft.AspNetCore.Routing.RouteEndpoint'
+2026-06-30 02:11:25.059 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44307/_framework/Microsoft.DotNet.HotReload.WebAssembly.Browser.99zm1jdh75.lib.module.js - 200 695 text/javascript 93.4427ms
+2026-06-30 02:11:25.059 +07:00 [INF] Sending file. Request path: 'favicon.ico'. Physical path: 'C:\Works\agrimarket\src\AgriMarket.Blazor.Client\obj\Debug\net10.0\compressed\guv9ekhq43-{0}-90yqlj465b-90yqlj465b.gz'
+2026-06-30 02:11:25.059 +07:00 [INF] Executed endpoint 'Microsoft.AspNetCore.Routing.RouteEndpoint'
+2026-06-30 02:11:25.059 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44307/favicon.ico - 200 32071 image/x-icon 89.4985ms
+2026-06-30 02:11:25.064 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44307/_framework/dotnet.js - null null
+2026-06-30 02:11:25.065 +07:00 [INF] Executing endpoint 'Microsoft.AspNetCore.Routing.RouteEndpoint'
+2026-06-30 02:11:25.067 +07:00 [INF] Executed endpoint 'Microsoft.AspNetCore.Routing.RouteEndpoint'
+2026-06-30 02:11:25.067 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44307/_framework/dotnet.js - 200 0 null 2.8178ms
+2026-06-30 02:11:35.266 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44307/main.css - null null
+2026-06-30 02:11:35.266 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44307/global.css - null null
+2026-06-30 02:11:35.266 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44307/AgriMarket.Blazor.Client.styles.css - null null
+2026-06-30 02:11:35.267 +07:00 [INF] The file /global.css was not modified
+2026-06-30 02:11:35.267 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44307/global.css - 304 null text/css 1.4426ms
+2026-06-30 02:11:35.268 +07:00 [INF] Executing endpoint 'Microsoft.AspNetCore.Routing.RouteEndpoint'
+2026-06-30 02:11:35.268 +07:00 [INF] Executing endpoint 'Microsoft.AspNetCore.Routing.RouteEndpoint'
+2026-06-30 02:11:35.269 +07:00 [INF] Sending file. Request path: 'main.css'. Physical path: 'C:\Works\agrimarket\src\AgriMarket.Blazor.Client\obj\Debug\net10.0\compressed\2peaqad3ds-{0}-sqxwlqvw23-sqxwlqvw23.gz'
+2026-06-30 02:11:35.269 +07:00 [INF] Sending file. Request path: 'AgriMarket.Blazor.Client.styles.css'. Physical path: 'C:\Works\agrimarket\src\AgriMarket.Blazor.Client\obj\Debug\net10.0\compressed\0us7potd22-{0}-fikdb2xbym-fikdb2xbym.gz'
+2026-06-30 02:11:35.269 +07:00 [INF] Executed endpoint 'Microsoft.AspNetCore.Routing.RouteEndpoint'
+2026-06-30 02:11:35.269 +07:00 [INF] Executed endpoint 'Microsoft.AspNetCore.Routing.RouteEndpoint'
+2026-06-30 02:11:35.270 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44307/main.css - 200 1302 text/css 3.8437ms
+2026-06-30 02:11:35.270 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44307/AgriMarket.Blazor.Client.styles.css - 200 317 text/css 3.7121ms
+2026-06-30 02:11:35.281 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44307/.well-known/appspecific/com.chrome.devtools.json - null null
+2026-06-30 02:11:35.282 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44307/.well-known/appspecific/com.chrome.devtools.json - 404 0 null 1.5044ms
+2026-06-30 02:11:35.283 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44307/.well-known/appspecific/com.chrome.devtools.json, Response status code: 404
+2026-06-30 02:11:35.319 +07:00 [INF] Request starting HTTP/2 GET https://localhost:44307/MudBlazor.min.js.map - null null
+2026-06-30 02:11:35.320 +07:00 [INF] Request finished HTTP/2 GET https://localhost:44307/MudBlazor.min.js.map - 404 0 null 0.6334ms
+2026-06-30 02:11:35.320 +07:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:44307/MudBlazor.min.js.map, Response status code: 404
+2026-06-30 02:19:11.567 +07:00 [INF] Starting web host.
+2026-06-30 02:19:12.346 +07:00 [DBG] Loaded ABP modules:
+2026-06-30 02:19:12.346 +07:00 [DBG] - AgriMarket.Blazor.AgriMarketBlazorModule
+2026-06-30 02:19:12.346 +07:00 [DBG]   - Volo.Abp.Autofac.AbpAutofacModule
+2026-06-30 02:19:12.346 +07:00 [DBG]     - Volo.Abp.Castle.AbpCastleCoreModule
+2026-06-30 02:19:12.346 +07:00 [DBG]   - Volo.Abp.AspNetCore.Mvc.UI.Bundling.AbpAspNetCoreMvcUiBundlingModule
+2026-06-30 02:19:12.346 +07:00 [DBG]     - Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.AbpAspNetCoreMvcUiBootstrapModule
+2026-06-30 02:19:12.346 +07:00 [DBG]       - Volo.Abp.AspNetCore.Mvc.UI.AbpAspNetCoreMvcUiModule
+2026-06-30 02:19:12.346 +07:00 [DBG]         - Volo.Abp.AspNetCore.Mvc.AbpAspNetCoreMvcModule
+2026-06-30 02:19:12.346 +07:00 [DBG]           - Volo.Abp.AspNetCore.AbpAspNetCoreModule
+2026-06-30 02:19:12.346 +07:00 [DBG]             - Volo.Abp.Auditing.AbpAuditingModule
+2026-06-30 02:19:12.346 +07:00 [DBG]               - Volo.Abp.Data.AbpDataModule
+2026-06-30 02:19:12.346 +07:00 [DBG]                 - Volo.Abp.ObjectExtending.AbpObjectExtendingModule
+2026-06-30 02:19:12.346 +07:00 [DBG]                   - Volo.Abp.Localization.AbpLocalizationAbstractionsModule
+2026-06-30 02:19:12.346 +07:00 [DBG]                   - Volo.Abp.Validation.AbpValidationAbstractionsModule
+2026-06-30 02:19:12.346 +07:00 [DBG]                 - Volo.Abp.Uow.AbpUnitOfWorkModule
+2026-06-30 02:19:12.346 +07:00 [DBG]                 - Volo.Abp.EventBus.Abstractions.AbpEventBusAbstractionsModule
+2026-06-30 02:19:12.346 +07:00 [DBG]               - Volo.Abp.Json.AbpJsonModule
+2026-06-30 02:19:12.346 +07:00 [DBG]                 - Volo.Abp.Json.SystemTextJson.AbpJsonSystemTextJsonModule
+2026-06-30 02:19:12.346 +07:00 [DBG]                   - Volo.Abp.Json.AbpJsonAbstractionsModule
+2026-06-30 02:19:12.346 +07:00 [DBG]                   - Volo.Abp.Timing.AbpTimingModule
+2026-06-30 02:19:12.346 +07:00 [DBG]                     - Volo.Abp.Localization.AbpLocalizationModule
+2026-06-30 02:19:12.346 +07:00 [DBG]                       - Volo.Abp.VirtualFileSystem.AbpVirtualFileSystemModule
+2026-06-30 02:19:12.346 +07:00 [DBG]                       - Volo.Abp.Settings.AbpSettingsModule
+2026-06-30 02:19:12.346 +07:00 [DBG]                         - Volo.Abp.Security.AbpSecurityModule
+2026-06-30 02:19:12.346 +07:00 [DBG]                       - Volo.Abp.Threading.AbpThreadingModule
+2026-06-30 02:19:12.346 +07:00 [DBG]               - Volo.Abp.MultiTenancy.AbpMultiTenancyModule
+2026-06-30 02:19:12.346 +07:00 [DBG]                 - Volo.Abp.MultiTenancy.AbpMultiTenancyAbstractionsModule
+2026-06-30 02:19:12.346 +07:00 [DBG]               - Volo.Abp.Auditing.AbpAuditingContractsModule
+2026-06-30 02:19:12.346 +07:00 [DBG]             - Volo.Abp.Http.AbpHttpModule
+2026-06-30 02:19:12.346 +07:00 [DBG]               - Volo.Abp.Http.AbpHttpAbstractionsModule
+2026-06-30 02:19:12.346 +07:00 [DBG]               - Volo.Abp.Minify.AbpMinifyModule
+2026-06-30 02:19:12.346 +07:00 [DBG]             - Volo.Abp.Authorization.AbpAuthorizationModule
+2026-06-30 02:19:12.346 +07:00 [DBG]               - Volo.Abp.Authorization.AbpAuthorizationAbstractionsModule
+2026-06-30 02:19:12.346 +07:00 [DBG]             - Volo.Abp.Validation.AbpValidationModule
+2026-06-30 02:19:12.346 +07:00 [DBG]             - Volo.Abp.ExceptionHandling.AbpExceptionHandlingModule
+2026-06-30 02:19:12.346 +07:00 [DBG]             - Volo.Abp.AspNetCore.AbpAspNetCoreAbstractionsModule
+2026-06-30 02:19:12.346 +07:00 [DBG]           - Volo.Abp.ApiVersioning.AbpApiVersioningAbstractionsModule
+2026-06-30 02:19:12.346 +07:00 [DBG]           - Volo.Abp.AspNetCore.Mvc.AbpAspNetCoreMvcContractsModule
+2026-06-30 02:19:12.346 +07:00 [DBG]             - Volo.Abp.Application.AbpDddApplicationContractsModule
+2026-06-30 02:19:12.346 +07:00 [DBG]           - Volo.Abp.UI.Navigation.AbpUiNavigationModule
+2026-06-30 02:19:12.346 +07:00 [DBG]             - Volo.Abp.UI.AbpUiModule
+2026-06-30 02:19:12.346 +07:00 [DBG]             - Volo.Abp.Features.AbpFeaturesModule
+2026-06-30 02:19:12.346 +07:00 [DBG]           - Volo.Abp.GlobalFeatures.AbpGlobalFeaturesModule
+2026-06-30 02:19:12.346 +07:00 [DBG]           - Volo.Abp.Application.AbpDddApplicationModule
+2026-06-30 02:19:12.346 +07:00 [DBG]             - Volo.Abp.Domain.AbpDddDomainModule
+2026-06-30 02:19:12.346 +07:00 [DBG]               - Volo.Abp.EventBus.AbpEventBusModule
+2026-06-30 02:19:12.346 +07:00 [DBG]                 - Volo.Abp.Guids.AbpGuidsModule
+2026-06-30 02:19:12.346 +07:00 [DBG]                 - Volo.Abp.BackgroundWorkers.AbpBackgroundWorkersModule
+2026-06-30 02:19:12.346 +07:00 [DBG]                 - Volo.Abp.DistributedLocking.AbpDistributedLockingAbstractionsModule
+2026-06-30 02:19:12.346 +07:00 [DBG]               - Volo.Abp.ObjectMapping.AbpObjectMappingModule
+2026-06-30 02:19:12.346 +07:00 [DBG]               - Volo.Abp.Specifications.AbpSpecificationsModule
+2026-06-30 02:19:12.346 +07:00 [DBG]               - Volo.Abp.Caching.AbpCachingModule
+2026-06-30 02:19:12.346 +07:00 [DBG]                 - Volo.Abp.Serialization.AbpSerializationModule
+2026-06-30 02:19:12.346 +07:00 [DBG]               - Volo.Abp.Domain.AbpDddDomainSharedModule
+2026-06-30 02:19:12.346 +07:00 [DBG]     - Volo.Abp.AspNetCore.Bundling.AbpAspNetCoreBundlingModule
+2026-06-30 02:19:12.346 +07:00 [DBG]       - Volo.Abp.AspNetCore.Mvc.UI.Bundling.AbpAspNetCoreMvcUiBundlingAbstractionsModule
+2026-06-30 02:19:12.346 +07:00 [DBG]   - Volo.Abp.AspNetCore.Components.WebAssembly.MudBlazorBasicTheme.Bundling.AbpAspNetCoreComponentsWebAssemblyMudBlazorBasicThemeBundlingModule
+2026-06-30 02:19:12.346 +07:00 [DBG]     - Volo.Abp.AspNetCore.Components.WebAssembly.Theming.MudBlazor.Bundling.AbpAspNetCoreComponentsWebAssemblyThemingMudBlazorBundlingModule
+2026-06-30 02:19:12.776 +07:00 [INF] User profile is available. Using 'C:\Users\santh\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-06-30 02:19:14.919 +07:00 [INF] Initialized all ABP modules.
+2026-06-30 02:19:15.038 +07:00 [INF] Now listening on: https://localhost:44307
+2026-06-30 02:19:15.038 +07:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-06-30 02:19:15.038 +07:00 [INF] Hosting environment: Development
+2026-06-30 02:19:15.038 +07:00 [INF] Content root path: C:\Works\agrimarket\src\AgriMarket.Blazor

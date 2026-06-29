@@ -6,8 +6,8 @@
 |---|-------|--------|
 | 01 | Scaffolding | done |
 | 02 | Auth: Phone OTP + JWT | done |
-| 02b | MAUI Auth (login screen) | ready-for-agent |
-| 03 | Catalog: Product CRUD + Grades | ready-for-agent |
+| 02b | MAUI Auth (login screen) | done |
+| 03 | Catalog: Product CRUD + Grades | done |
 | 04 | Catalog: Product Suggestions | ready-for-agent |
 | 05 | KYC: Submit | ready-for-agent |
 | 06 | KYC: Admin Review | ready-for-agent |

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+using AgriMarket.Products;
+using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
 using Volo.Abp.Data;
@@ -24,6 +25,9 @@ public class AgriMarketDbContext :
     ITenantManagementDbContext
 {
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
+
+    public DbSet<Product> Products { get; set; }
+    public DbSet<ProductGrade> ProductGrades { get; set; }
 
     #region Entities from the modules
 
@@ -80,6 +84,8 @@ public class AgriMarketDbContext :
          * plus the EF mapping in AgriMarketEfCoreEntityExtensionMappings. */
 
         /* Configure your own tables/entities inside here */
+
+        builder.ConfigureProducts();
 
         //builder.Entity<YourEntity>(b =>
         //{

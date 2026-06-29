@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using AgriMarket.Localization;
@@ -46,6 +46,26 @@ public class AgriMarketMenuContributor : IMenuContributor
                 icon: "fas fa-home"
             )
         );
+
+        // Catalog menu — product browse + admin management.
+        var catalog = new ApplicationMenuItem(
+            AgriMarketMenus.Catalog,
+            l["Menu:Catalog"],
+            icon: "fas fa-leaf"
+        );
+        catalog.AddItem(new ApplicationMenuItem(
+            AgriMarketMenus.Products,
+            l["Menu:Products"],
+            "/catalog/products",
+            icon: "fas fa-apple-alt"
+        ));
+        catalog.AddItem(new ApplicationMenuItem(
+            AgriMarketMenus.ProductManagement,
+            l["Permission:Products.Manage"],
+            "/catalog/product-management",
+            icon: "fas fa-cogs"
+        ).RequirePermissions("AgriMarket.Products.Manage"));
+        context.Menu.Items.Insert(1, catalog);
 
         var administration = context.Menu.GetAdministration();
 
