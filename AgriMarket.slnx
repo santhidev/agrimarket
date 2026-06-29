@@ -20,8 +20,9 @@
     <Project Path="src/AgriMarket.HttpApi.Host/AgriMarket.HttpApi.Host.csproj" />
     <Project Path="src/AgriMarket.HttpApi/AgriMarket.HttpApi.csproj" />
     
-    
-    
+    <!-- MAUI mobile app -->
+    <Project Path="src/mobile/AgriMarket.Maui.Core/AgriMarket.Maui.Core.csproj" />
+    <Project Path="src/mobile/AgriMarket.Maui/AgriMarket.Maui.csproj" />
   </Folder>
   <Folder Name="/test/">
     <Project Path="test/AgriMarket.Application.Tests/AgriMarket.Application.Tests.csproj" />
@@ -30,6 +31,6 @@
     <Project Path="test/AgriMarket.HttpApi.Client.ConsoleTestApp/AgriMarket.HttpApi.Client.ConsoleTestApp.csproj" />
     
     <Project Path="test/AgriMarket.TestBase/AgriMarket.TestBase.csproj" />
-    
+    <Project Path="test/AgriMarket.Maui.Tests/AgriMarket.Maui.Tests.csproj" />
   </Folder>
 </Solution>

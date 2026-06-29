@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AgriMarket.Maui.Pages.LoginPage"
+             Title="เข้าสู่ระบบ"
+             Shell.NavBarIsVisible="False">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="30,60,30,30"
+            Spacing="20"
+            MaximumWidthRequest="400"
+            HorizontalOptions="Center">
+
+            <!-- Header -->
+            <Label Text="AgriMarket"
+                   FontSize="32"
+                   FontAttributes="Bold"
+                   TextColor="#2E7D32"
+                   HorizontalOptions="Center" />
+            <Label Text="ตลาดขายตรง ตัดพ่อค้าคนกลาง"
+                   FontSize="14"
+                   TextColor="Gray"
+                   HorizontalOptions="Center"
+                   Margin="0,0,0,20" />
+
+            <!-- Phone step -->
+            <VerticalStackLayout Spacing="16" IsVisible="{Binding Step, Converter={StaticResource StepToBoolConverter}, ConverterParameter=Phone}">
+
+                <Label Text="เบอร์โทรศัพท์"
+                       FontSize="14" />
+                <Entry Placeholder="0812345678"
+                       Keyboard="Telephone"
+                       Text="{Binding PhoneNumber}"
+                       MaxLength="10" />
+
+                <Button Text="ขอรหัสยืนยัน"
+                        Command="{Binding RequestOtpCommand}"
+                        BackgroundColor="#2E7D32"
+                        TextColor="White"
+                        CornerRadius="8" />
+            </VerticalStackLayout>
+
+            <!-- OTP step -->
+            <VerticalStackLayout Spacing="16" IsVisible="{Binding Step, Converter={StaticResource StepToBoolConverter}, ConverterParameter=Otp}">
+
+                <Label Text="กรอกรหัสยืนยัน 6 หลักที่ได้รับ"
+                       FontSize="16"
+                       HorizontalOptions="Center" />
+                <Label Text="(โหมดทดสอบ: ใช้ 000000)"
+                       FontSize="13"
+                       TextColor="Gray"
+                       HorizontalOptions="Center"
+                       IsVisible="{Binding TestCode, Converter={StaticResource NotNullToBoolConverter}}" />
+
+                <Entry Placeholder="000000"
+                       Keyboard="Numeric"
+                       Text="{Binding Code}"
+                       MaxLength="6" />
+
+                <Button Text="เข้าสู่ระบบ"
+                        Command="{Binding VerifyOtpCommand}"
+                        BackgroundColor="#2E7D32"
+                        TextColor="White"
+                        CornerRadius="8" />
+                <Button Text="ย้อนกลับ"
+                        Command="{Binding BackToPhoneCommand}"
+                        BackgroundColor="Transparent"
+                        TextColor="#2E7D32" />
+            </VerticalStackLayout>
+
+            <!-- Loading indicator -->
+            <ActivityIndicator IsRunning="{Binding IsLoading}"
+                               IsVisible="{Binding IsLoading}"
+                               Color="#2E7D32" />
+
+            <!-- Error message -->
+            <Label Text="{Binding ErrorMessage}"
+                   TextColor="Red"
+                   FontSize="13"
+                   IsVisible="{Binding ErrorMessage, Converter={StaticResource NotNullToBoolConverter}}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
