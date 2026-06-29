@@ -4,7 +4,7 @@
 
 | # | Title | Status |
 |---|-------|--------|
-| 01 | Scaffolding | ready-for-human |
+| 01 | Scaffolding | done |
 | 02 | Auth: Phone OTP + JWT | ready-for-agent |
 | 03 | Catalog: Product CRUD + Grades | ready-for-agent |
 | 04 | Catalog: Product Suggestions | ready-for-agent |

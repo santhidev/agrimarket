@@ -74,10 +74,20 @@ public class AgriMarketHttpApiHostModule : AbpModule
         ConfigureVirtualFileSystem(context);
         ConfigureCors(context, configuration);
         ConfigureSwaggerServices(context, configuration);
+        ConfigureRedis(context, configuration);
 
         context.Services.AddHangfire(config =>
             config.UsePostgreSqlStorage(configuration.GetConnectionString("Default")));
         context.Services.AddHangfireServer();
+    }
+
+    private static void ConfigureRedis(ServiceConfigurationContext context, IConfiguration configuration)
+    {
+        context.Services.Configure<Microsoft.Extensions.Caching.StackExchangeRedis.RedisCacheOptions>(options =>
+        {
+            options.Configuration = configuration.GetConnectionString("Redis");
+            options.InstanceName = "AgriMarket";
+        });
     }
 
     private void ConfigureAuthentication(ServiceConfigurationContext context)

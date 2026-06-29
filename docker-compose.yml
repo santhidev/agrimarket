@@ -1,0 +1,51 @@
+# Local development dependencies for AgriMarket.
+#
+# Spins up PostgreSQL + Redis so the API host and DbMigrator can connect,
+# the Hangfire dashboard can mount its Postgres storage, and the migration
+# can run. Credentials match the connection strings in
+# src/AgriMarket.HttpApi.Host/appsettings.json and
+# src/AgriMarket.DbMigrator/appsettings.json:
+#   Default: Host=localhost;Port=5432;Database=AgriMarket;User ID=root;Password=myPassword;
+#   Redis:   localhost:6379
+#
+# Usage:
+#   docker compose up -d           start Postgres + Redis
+#   docker compose ps              show status
+#   docker compose logs -f db      tail Postgres logs
+#   docker compose down            stop (keeps data in named volumes)
+#   docker compose down -v         stop AND delete all stored data
+
+services:
+  db:
+    image: postgres:17
+    container_name: agrimarket-db
+    environment:
+      POSTGRES_DB: AgriMarket
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: myPassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - agrimarket-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U root -d AgriMarket"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7
+    container_name: agrimarket-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - agrimarket-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  agrimarket-db-data:
+  agrimarket-redis-data:
