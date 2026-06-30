@@ -1,24 +1,11 @@
-import { prisma } from "@agrimarket/database";
-import Link from "next/link";
-
-// Server Component — exercises the DB on the server to prove the wiring works.
-export default async function HomePage() {
-  let userCount = 0;
-  try {
-    userCount = await prisma.user.count();
-  } catch {
-    userCount = -1; // DB not reachable; health route will report details.
-  }
-
+// Home page (smoke) — kept simple; feature pages arrive with later issues.
+export default function HomePage() {
   return (
     <main>
       <h1>AgriMarket</h1>
       <p>ตลาดขายตรง ตัดพ่อค้าคนกลาง</p>
       <p>
-        Users in DB: <strong>{userCount >= 0 ? userCount : "unreachable"}</strong>
-      </p>
-      <p>
-        <Link href="/api/health">/api/health</Link>
+        <a href="/api/health">/api/health</a>
       </p>
     </main>
   );

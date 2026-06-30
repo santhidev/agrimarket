@@ -44,3 +44,13 @@ Scaffolded the TypeScript monorepo (Turborepo + pnpm workspaces). All acceptance
 - pnpm 11 blocks install-time build scripts; `onlyBuiltDependencies` in `pnpm-workspace.yaml` allows prisma/sharp/esbuild. The `pnpm approve-builds` command keeps re-inserting a placeholder `allowBuilds` block — ignore it, the `onlyBuiltDependencies` list is the source of truth.
 - Seed script uses `tsx --env-file=.env` (tsx, not raw `node --experimental-strip-types`, because the Prisma generated client uses directory imports that need a TS resolver).
 - `.env` lives in each package that needs it (`apps/web/.env`, `packages/database/.env`) — no root `.env` (monorepo anti-pattern per ADR 0002).
+
+### Migrated to InsForge — 2026-06-30
+
+The Prisma + docker-compose Postgres backend was replaced by **InsForge BaaS** per ADR 0003. The monorepo shell (Turborepo + Next.js + shared) is unchanged; only the data layer changed:
+
+- `packages/database` now exports an `@insforge/sdk` client singleton (`createClient` + `createAdminClient`) instead of a Prisma client. No schema/migrations — InsForge manages the Postgres schema.
+- The `users` table is InsForge's managed `auth.users`; AgriMarket-specific fields (tier, kyc_status, is_admin, ...) live in its `profile` jsonb column (per ADR 0003 decision).
+- `GET /api/health` now queries InsForge (`auth.users` head count) → verified `{"ok":true,"db":true}`.
+- The admin-seed step moved to InsForge (auth.users managed, no local seed script).
+- `.insforge/project.json` (gitignored, contains API key) + `.env.local` (anon key + URL) replaced the old `.env` files.

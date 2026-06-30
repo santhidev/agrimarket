@@ -1,58 +1,36 @@
-import { PrismaClient } from "../generated/client";
-import { PrismaPg } from "@prisma/adapter-pg";
-
-// Re-exports for consumers (apps/web imports from "@agrimarket/database").
-export { redis } from "./redis";
-export { OtpService } from "./otp";
+import { createClient } from "@insforge/sdk";
 
 /**
- * Prisma client for AgriMarket, backed by PostgreSQL via the @prisma/adapter-pg
- * driver adapter (per prisma-database-setup skill). Use the exported `prisma`
- * singleton everywhere — never construct PrismaClient directly.
+ * InsForge client singleton for AgriMarket.
  *
- * DATABASE_URL must be set in the consuming app's environment (e.g. apps/web/.env).
+ * Uses the anon key for user-scoped access (RLS-enforced). The URL + anon key
+ * are read from the consuming app's environment (NEXT_PUBLIC_* for Next.js).
+ *
+ * For privileged server-only operations (seeding, migrations, admin queries),
+ * use `createAdminClient()` below which authenticates with the full-access
+ * API key from `.insforge/project.json`.
  */
-function createPrismaClient(): PrismaClient {
-  const url = process.env.DATABASE_URL;
-  if (!url) {
-    throw new Error("DATABASE_URL is not set in the environment.");
-  }
-  const adapter = new PrismaPg({ connectionString: url });
-  return new PrismaClient({ adapter });
+
+const url = process.env.NEXT_PUBLIC_INSFORGE_URL;
+const anonKey = process.env.NEXT_PUBLIC_INSFORGE_ANON_KEY;
+
+if (!url || !anonKey) {
+  throw new Error(
+    "NEXT_PUBLIC_INSFORGE_URL and NEXT_PUBLIC_INSFORGE_ANON_KEY must be set."
+  );
 }
 
-// Singleton: avoid exhausting the connection pool during Next.js hot reload.
-const globalForPrisma = globalThis as unknown as {
-  prisma?: PrismaClient;
-};
-
-export const prisma: PrismaClient = globalForPrisma.prisma ?? createPrismaClient();
-
-if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
-}
+export const insforge = createClient({ baseUrl: url, anonKey });
 
 /**
- * Idempotently seed the bootstrap admin user from a phone number.
- * Called by the seed script (apps/web/scripts/seed.ts) using ADMIN_PHONE.
+ * Admin client — full access, bypasses RLS. Server-only; never import in
+ * client components. Reads the API key from .insforge/project.json via the
+ * INSFORGE_API_KEY env var (set by the deployment, not committed).
  */
-export async function seedAdmin(phone: string): Promise<void> {
-  const existing = await prisma.user.findUnique({ where: { phone } });
-  if (existing) {
-    // Ensure the admin flag is set on an already-existing user.
-    if (!existing.isAdmin) {
-      await prisma.user.update({
-        where: { id: existing.id },
-        data: { isAdmin: true },
-      });
-    }
-    return;
+export function createAdminClient() {
+  const apiKey = process.env.INSFORGE_API_KEY;
+  if (!apiKey) {
+    throw new Error("INSFORGE_API_KEY is not set (admin-only operation).");
   }
-
-  await prisma.user.create({
-    data: {
-      phone,
-      isAdmin: true,
-    },
-  });
+  return createClient({ baseUrl: url, anonKey, apiKey });
 }
