@@ -22,6 +22,9 @@ coverage/
 .env.*.local
 *.pem
 
+# InsForge project config (contains API key — never commit)
+.insforge/
+
 # Prisma generated client (regenerated locally)
 # Keep schema + migrations; ignore the generated Prisma client (regenerated
 # from schema via `pnpm db:generate`). Output path is set in schema.prisma.
