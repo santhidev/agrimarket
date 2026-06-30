@@ -2,8 +2,9 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "plugins": [{ "name": "next" }],
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*", "./*"],
+      "@/*": ["./*"],
       "@agrimarket/database": ["../../packages/database/src/index.ts"],
       "@agrimarket/database/*": ["../../packages/database/src/*"],
       "@agrimarket/shared": ["../../packages/shared/src/index.ts"],

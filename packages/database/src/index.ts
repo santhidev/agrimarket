@@ -1,6 +1,10 @@
 import { PrismaClient } from "../generated/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 
+// Re-exports for consumers (apps/web imports from "@agrimarket/database").
+export { redis } from "./redis";
+export { OtpService } from "./otp";
+
 /**
  * Prisma client for AgriMarket, backed by PostgreSQL via the @prisma/adapter-pg
  * driver adapter (per prisma-database-setup skill). Use the exported `prisma`
