@@ -1,0 +1,19 @@
+import type { Metadata } from "next";
+import "./globals.css";
+
+export const metadata: Metadata = {
+  title: "AgriMarket",
+  description: "ตลาดขายตรง ตัดพ่อค้าคนกลาง",
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="th">
+      <body>{children}</body>
+    </html>
+  );
+}

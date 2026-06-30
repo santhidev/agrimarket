@@ -1,0 +1,13 @@
+packages:
+  - 'apps/*'
+  - 'packages/*'
+
+# Allow these packages to run install-time build scripts (postinstall).
+# Prisma needs its postinstall to fetch the query engine; sharp is needed by
+# Next.js; esbuild is needed by tsx (the seed-script runner).
+onlyBuiltDependencies:
+  - '@prisma/client'
+  - '@prisma/engines'
+  - prisma
+  - sharp
+  - esbuild

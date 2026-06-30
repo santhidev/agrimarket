@@ -23,8 +23,9 @@ coverage/
 *.pem
 
 # Prisma generated client (regenerated locally)
-# Keep schema + migrations; ignore generated client lib output
-packages/database/src/generated/
+# Keep schema + migrations; ignore the generated Prisma client (regenerated
+# from schema via `pnpm db:generate`). Output path is set in schema.prisma.
+packages/database/generated/
 
 # Expo / React Native (when mobile is added)
 .expo/
