@@ -103,9 +103,11 @@ async function findOrCreateUser(phone: string) {
   const password = `otp-${phone}-agrimarket`;
 
   // Try signUp — succeeds for new users, errors for existing.
+  // autoConfirm: true skips email verification (phone OTP is the real gate).
   const { data, error } = await client.auth.signUp({
     email,
     password,
+    autoConfirm: true,
   });
 
   if (data?.user) {

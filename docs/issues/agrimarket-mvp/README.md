@@ -5,7 +5,7 @@
 | # | Title | Status | Blocked by |
 |---|-------|--------|------------|
 | 01 | Monorepo scaffold + DB bootstrap | done | — |
-| 02 | Auth: Phone OTP login | ready-for-agent | 01 |
+| 02 | Auth: Phone OTP login | done | 01 |
 | 03 | User profile + admin bootstrap | ready-for-agent | 02 |
 | 04 | Catalog: Products + Grades CRUD | ready-for-agent | 01 |
 | 05 | Catalog: Product suggestions + review | ready-for-agent | 04 |

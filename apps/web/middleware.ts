@@ -14,5 +14,13 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((!api/auth/refresh|_next/static|_next/image|favicon.ico).*)"],
+  matcher: [
+    /*
+     * Match all paths except:
+     * - /api/auth/refresh (refresh endpoint, must run without middleware)
+     * - /_next/static, /_next/image (Next internals)
+     * - /favicon.ico
+     */
+    "/((?!api/auth/refresh|_next/static|_next/image|favicon.ico).*)",
+  ],
 };

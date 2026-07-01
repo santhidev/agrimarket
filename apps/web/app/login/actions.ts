@@ -43,8 +43,6 @@ export async function verifyOtpAction(phone: string, code: string) {
   }
 
   // 2. Establish InsForge session via signInWithPassword.
-  // The edge function created the user with a deterministic password derived
-  // from the phone number — never user-facing; OTP is the real gate.
   const userData = data as { user: { email: string; password?: string } };
   const email = userData.user.email;
   const password = userData.user.password ?? `otp-${phone}-agrimarket`;
