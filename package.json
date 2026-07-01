@@ -1,0 +1,20 @@
+{
+  "name": "agrimarket",
+  "private": true,
+  "packageManager": "pnpm@11.9.0",
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "db:migrate": "pnpm --filter @agrimarket/database exec prisma migrate dev",
+    "db:generate": "pnpm --filter @agrimarket/database exec prisma generate",
+    "db:seed": "pnpm --filter @agrimarket/web seed",
+    "db:studio": "pnpm --filter @agrimarket/database exec prisma studio"
+  },
+  "devDependencies": {
+    "turbo": "^2.5.6",
+    "typescript": "^5.4.0"
+  }
+}
