@@ -1,132 +1,101 @@
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+@import "tailwindcss";
+
+/* ───────────────────────────────────────────────────────────────
+   AgriMarket design tokens (from Figma Make spec)
+   Palette: warm-green marketplace, orange price accent, generous
+   whitespace. Semantic status colors drive demand/offer badges.
+   ─────────────────────────────────────────────────────────────── */
+@theme {
+  --font-sans: var(--font-inter), var(--font-noto-thai), ui-sans-serif,
+    system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  /* Brand — green */
+  --color-green-50: #e8f5e9;
+  --color-green-100: #c8e6c9;
+  --color-green-200: #a5d6a7;
+  --color-green-500: #388e3c;
+  --color-green-600: #2e7d32;
+  --color-green-700: #1b5e20;
+
+  /* Accent — orange (price / CTA) */
+  --color-accent: #f9a825;
+  --color-accent-light: #fff8e1;
+
+  /* Neutral */
+  --color-surface: #f5f7f5;
+  --color-ink: #1f2a1d;
+  --color-muted: #6b7b69;
+  --color-line: rgba(0, 0, 0, 0.08);
+
+  /* Admin */
+  --color-admin: #1b3a1b;
+
+  /* Semantic */
+  --color-success: #2e7d32;
+  --color-warn: #f9a825;
+  --color-error: #c62828;
+  --color-info: #1565c0;
+
+  --radius-card: 0.75rem; /* 12px */
+  --radius-chip: 999px;
+  --radius-modal: 1rem; /* 16px */
 }
 
-html,
-body {
-  margin: 0;
-  padding: 0;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  background: #f7f7f8;
-  color: #18181b;
+/* Status badge palette — referenced by the Badge component. */
+:root {
+  --st-open: #2e7d32;
+  --st-open-bg: #e8f5e9;
+  --st-matched: #1565c0;
+  --st-matched-bg: #e3f2fd;
+  --st-completed: #555555;
+  --st-completed-bg: #eeeeee;
+  --st-expired: #777777;
+  --st-expired-bg: #e0e0e0;
+  --st-cancelled: #c62828;
+  --st-cancelled-bg: #ffeeee;
+  --st-active: #388e3c;
+  --st-active-bg: #f1f8e9;
+  --st-pending: #f57f17;
+  --st-pending-bg: #fff8e1;
+  --st-confirmed: #2e7d32;
+  --st-confirmed-bg: #e8f5e9;
+  --st-selected: #1b5e20;
+  --st-selected-bg: #c8e6c9;
+  --st-declined: #c62828;
+  --st-declined-bg: #ffeeee;
 }
 
-main {
-  max-width: 640px;
-  margin: 0 auto;
-  padding: 2rem 1rem;
+@layer base {
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background: var(--color-surface);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Visible keyboard focus everywhere. */
+  :focus-visible {
+    outline: 2px solid var(--color-green-600);
+    outline-offset: 2px;
+  }
 }
 
-/* Login page */
-.login {
-  max-width: 400px;
-  margin: 4rem auto;
-  padding: 0 1rem;
-}
-
-.login__card {
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
-  padding: 2.5rem 2rem;
-}
-
-.login__title {
-  margin: 0 0 0.25rem;
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: #16a34a;
-  text-align: center;
-}
-
-.login__subtitle {
-  margin: 0 0 1.5rem;
-  text-align: center;
-  color: #52525b;
-  font-size: 1rem;
-}
-
-.login__form {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.login__label {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #27272a;
-}
-
-.login__input {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border: 1px solid #d4d4d8;
-  border-radius: 10px;
-  font-size: 1rem;
-  outline: none;
-  transition: border-color 0.15s;
-}
-
-.login__input:focus {
-  border-color: #16a34a;
-  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.12);
-}
-
-.login__input--code {
-  letter-spacing: 0.5rem;
-  text-align: center;
-  font-size: 1.25rem;
-}
-
-.login__btn {
-  margin-top: 0.5rem;
-  padding: 0.85rem 1rem;
-  background: #16a34a;
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-.login__btn:hover:not(:disabled) {
-  background: #15803d;
-}
-
-.login__btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.login__link {
-  margin-top: 0.5rem;
-  background: none;
-  border: none;
-  color: #71717a;
-  font-size: 0.9rem;
-  cursor: pointer;
-  text-decoration: underline;
-  align-self: center;
-}
-
-.login__hint {
-  margin: 0 0 0.5rem;
-  text-align: center;
-  color: #52525b;
-  font-size: 0.95rem;
-}
-
-.login__error {
-  margin: 0 0 1rem;
-  padding: 0.6rem 0.85rem;
-  background: #fef2f2;
-  color: #b91c1c;
-  border-radius: 8px;
-  font-size: 0.875rem;
-  text-align: center;
+@layer utilities {
+  /* Respect reduced-motion preferences for any transitions we add. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 }
