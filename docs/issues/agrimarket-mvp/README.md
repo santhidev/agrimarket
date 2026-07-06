@@ -7,7 +7,7 @@
 | 01 | Monorepo scaffold + DB bootstrap | done | — |
 | 02 | Auth: Phone OTP login | done | 01 |
 | 03 | User profile + admin bootstrap | done | 02 |
-| 04 | Catalog: Products + Grades CRUD | ready-for-agent | 01 |
+| 04 | Catalog: Products + Grades CRUD | done | 01 |
 | 05 | Catalog: Product suggestions + review | ready-for-agent | 04 |
 | 06 | KYC: Submit + Admin review | ready-for-agent | 02 |
 | 07 | Demand: Create + Browse + Detail | ready-for-agent | 03, 04 |

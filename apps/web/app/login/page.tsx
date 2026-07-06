@@ -151,7 +151,7 @@ export default function LoginPage() {
                   id="phone"
                   label="เบอร์มือถือ"
                   prefix="+66"
-                  placeholder="8x-xxx-xxxx"
+                  placeholder="81-234-5678"
                   value={phone}
                   onChange={setPhone}
                   type="tel"

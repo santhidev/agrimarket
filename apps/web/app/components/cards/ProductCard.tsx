@@ -20,11 +20,17 @@ export function ProductCard({ product }: { product: Product }) {
   return (
     <Card className="overflow-hidden hover:shadow-md transition-shadow cursor-pointer">
       <div className="relative bg-green-50">
-        <img
-          src={product.image}
-          alt={product.name}
-          className="w-full aspect-square object-cover"
-        />
+        {product.image ? (
+          <img
+            src={product.image}
+            alt={product.name}
+            className="w-full aspect-square object-cover"
+          />
+        ) : (
+          <div className="w-full aspect-square flex items-center justify-center text-5xl" aria-hidden="true">
+            🌱
+          </div>
+        )}
         <span className="absolute top-2 left-2 bg-green-50/90 text-green-600 text-xs px-2 py-0.5 rounded-chip font-medium border border-green-100">
           {product.category}
         </span>

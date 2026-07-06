@@ -7,6 +7,11 @@ export const SHARED_PACKAGE_VERSION = "0.0.0";
 
 // Auth schemas (shared between API request validation + client form validation).
 export * from "./auth/schemas";
+export * from "./auth/normalize-phone";
 
 // User enums (CreditTier, KycStatus).
 export * from "./users/enums";
+
+// Catalog: product/grade zod schemas + default-grade helper (Issue 04).
+export * from "./catalog/default-grade";
+export * from "./catalog/schemas";

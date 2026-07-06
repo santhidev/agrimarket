@@ -2,14 +2,27 @@
 
 import { cookies } from "next/headers";
 import { createAuthActions, createBrowserClient } from "@insforge/sdk/ssr";
-import { requestOtpSchema, verifyOtpSchema } from "@agrimarket/shared";
+import {
+  requestOtpSchema,
+  verifyOtpSchema,
+  normalizePhone,
+} from "@agrimarket/shared";
 
 // Phone OTP auth — server actions.
 // Flow: requestOtp → user enters code → verifyOtp (calls edge function) →
 // signInWithPassword (establishes InsForge session in cookies).
+//
+// The login input shows a "+66" prefix, which makes users type the mobile
+// without a leading 0 (e.g. "812345678"), paste "+66812345678", or use dashes.
+// normalizePhone() canonicalizes all of these to the "0xxxxxxxxx" form that
+// the schema and the DB expect — without it, every sign-in attempt is rejected.
 
 export async function requestOtpAction(phone: string) {
-  const parsed = requestOtpSchema.safeParse({ phone });
+  const normalized = normalizePhone(phone);
+  if (!normalized) {
+    return { error: "เบอร์โทรศัพท์ไม่ถูกต้อง" };
+  }
+  const parsed = requestOtpSchema.safeParse({ phone: normalized });
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "เบอร์โทรศัพท์ไม่ถูกต้อง" };
   }
@@ -27,7 +40,11 @@ export async function requestOtpAction(phone: string) {
 }
 
 export async function verifyOtpAction(phone: string, code: string) {
-  const parsed = verifyOtpSchema.safeParse({ phone, code });
+  const normalized = normalizePhone(phone);
+  if (!normalized) {
+    return { error: "เบอร์โทรศัพท์ไม่ถูกต้อง" };
+  }
+  const parsed = verifyOtpSchema.safeParse({ phone: normalized, code });
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "ข้อมูลไม่ถูกต้อง" };
   }
