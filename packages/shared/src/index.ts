@@ -15,3 +15,6 @@ export * from "./users/enums";
 // Catalog: product/grade zod schemas + default-grade helper (Issue 04).
 export * from "./catalog/default-grade";
 export * from "./catalog/schemas";
+
+// Catalog: product suggestions (Issue 05).
+export * from "./catalog/suggestion-schemas";
