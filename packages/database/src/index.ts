@@ -1,4 +1,7 @@
-import { createClient } from "@insforge/sdk";
+import {
+  createClient,
+  createAdminClient as createSdkAdminClient,
+} from "@insforge/sdk";
 
 /**
  * InsForge client singleton for AgriMarket.
@@ -24,7 +27,7 @@ export const insforge = createClient({ baseUrl: url, anonKey });
 
 /**
  * Admin client — full access, bypasses RLS. Server-only; never import in
- * client components. Reads the API key from .insforge/project.json via the
+ * client components. Reads the API key from `.insforge/project.json` via the
  * INSFORGE_API_KEY env var (set by the deployment, not committed).
  */
 export function createAdminClient() {
@@ -32,5 +35,5 @@ export function createAdminClient() {
   if (!apiKey) {
     throw new Error("INSFORGE_API_KEY is not set (admin-only operation).");
   }
-  return createClient({ baseUrl: url, anonKey, apiKey });
+  return createSdkAdminClient({ baseUrl: url, apiKey });
 }

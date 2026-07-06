@@ -104,23 +104,32 @@ async function findOrCreateUser(phone: string) {
 
   // Try signUp — succeeds for new users, errors for existing.
   // autoConfirm: true skips email verification (phone OTP is the real gate).
-  const { data, error } = await client.auth.signUp({
+  //
+  // The on_auth_user_created DB trigger auto-inserts a public.profiles row
+  // for every new auth.users row, so the web app always finds a profile to
+  // read from. No profile work is needed here.
+  const { data } = await client.auth.signUp({
     email,
     password,
     autoConfirm: true,
   });
 
+  // `user` is present for a brand-new signup; absent for an existing user
+  // (signUp errors). The web verifyOtpAction gates on `data.user`, so keep
+  // it truthy in both branches by returning a minimal marker for existing
+  // users — the real identity used for the session is email + password below.
   if (data?.user) {
     return {
-      id: data.user.id,
-      email: data.user.email,
+      user: { id: data.user.id, email: data.user.email },
+      email,
       phone,
-      profile: data.user.user_metadata ?? { phone },
+      password,
+      profile: { phone },
     };
   }
 
-  // User already exists (signUp error). Return identity for session creation.
-  return { email, phone, password, profile: { phone } };
+  // Existing user — return identity for session creation.
+  return { user: { email }, email, phone, password, profile: { phone } };
 }
 
 function randomCode(length: number): string {

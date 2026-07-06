@@ -42,6 +42,19 @@ Migrate the **entire backend** to InsForge, keeping the Next.js App Router + Tur
 - **Risk:** custom OTP in an edge function must correctly issue InsForge-compatible sessions; mitigated by following the InsForge auth skill's JWT/session guidance.
 - **Secrets:** `.insforge/project.json` (with API key) and `.env.local` (with anon key + URL) are local-only and gitignored.
 
+## Amendment — profile fields moved to `public.profiles` (Issue 03, 2026-07)
+
+The decision above stored AgriMarket-specific profile fields (tier, kyc_status, is_admin, scores) in `auth.users.user_metadata` (jsonb). Issue 03 reversed this: those fields now live in a dedicated **`public.profiles`** table (1:1 with `auth.users`, same `id`).
+
+**Why:** the admin dashboard (#18) needs to filter, sort, and aggregate users by tier / KYC status / admin flag, and future RLS policies (offer submission requires `kyc_status = 'Approved'`) need to reference these fields. Doing that on a jsonb blob requires jsonb operators in every query and policy, is slower, and makes partial updates awkward (rewrite the whole blob). Typed columns on a normal table are the standard pattern — and the access-control skill explicitly recommends normalizing over large jsonb.
+
+**Consequences:**
+
+- A new `public.profiles` table holds the AgriMarket fields; `auth.users.user_metadata` is no longer used for them.
+- An `on_auth_user_created` trigger auto-inserts a profile row whenever a new `auth.users` row appears, so the web app always finds a profile.
+- RLS: a user reads/updates only their own row; admins read all rows. The admin check goes through a `SECURITY DEFINER` helper (`public.is_current_admin()`) to avoid the infinite-recursion trap of querying `profiles` from within a `profiles` policy.
+- `require_email_verification` is disabled at the project level — the phone-OTP edge function is the real verification gate, and the synthetic `<phone>@phone.agrimarket` emails have no inbox.
+
 ## What is kept vs discarded
 
 - **Kept (re-expressed):** `CONTEXT.md` domain glossary + state machines; PRD user stories; the 19-issue breakdown (revised backend decisions); Turborepo + Next.js shell; shared zod schemas; the 29 installed agent skills.

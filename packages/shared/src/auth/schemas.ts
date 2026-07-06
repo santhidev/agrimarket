@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { CREDIT_TIERS, KYC_STATUSES } from "../users/enums";
 
 // Thai mobile number: 0 followed by 8-9 digits (e.g. 0812345678, 021234567).
 // Stored and validated as digits-only (no dashes/spaces).
@@ -23,3 +24,17 @@ export const verifyOtpSchema = z.object({
 
 export type RequestOtpInput = z.infer<typeof requestOtpSchema>;
 export type VerifyOtpInput = z.infer<typeof verifyOtpSchema>;
+
+/// Shape of a profile row returned by GET /api/users/:id/profile.
+/// Mirrors `public.profiles`; used by the web app + edge-function contract.
+export const profileSchema = z.object({
+  id: z.string().uuid(),
+  phone: phoneSchema,
+  tier: z.enum(CREDIT_TIERS as [string, ...string[]]),
+  kycStatus: z.enum(KYC_STATUSES as [string, ...string[]]),
+  buyerScore: z.number().int().min(0),
+  sellerScore: z.number().int().min(0),
+  isAdmin: z.boolean(),
+});
+
+export type Profile = z.infer<typeof profileSchema>;
