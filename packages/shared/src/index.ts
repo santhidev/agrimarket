@@ -22,7 +22,12 @@ export * from "./catalog/schemas";
 // Catalog: product suggestions (Issue 05).
 export * from "./catalog/suggestion-schemas";
 
-// Demand: lifecycle enums, zod schemas, transitions (Issue 07).
+// Demand: lifecycle enums, zod schemas, transitions (Issue 07, extended 08).
 export * from "./demand/enums";
 export * from "./demand/schemas";
 export * from "./demand/demand-transitions";
+
+// Offer: lifecycle enums + transitions (Issue 08 vocabulary for the demand-
+// cancel cascade + offer-acceptance gate; the offers table lands in #10).
+export * from "./offer/enums";
+export * from "./offer/offer-transitions";

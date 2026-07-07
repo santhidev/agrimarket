@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import {
   createDemandSchema,
+  extendDemandSchema,
   demandQuerySchema,
   demandSchema,
   DemandStatus,
@@ -161,6 +162,42 @@ describe("demandSchema (API read shape)", () => {
   it("rejects a negative pendingQuantity", () => {
     expect(
       demandSchema.safeParse({ ...valid, pendingQuantity: -1 }).success
+    ).toBe(false);
+  });
+});
+
+// extendDemandSchema (Issue 08): PATCH /api/demands/:id body. The only field a
+// buyer may extend is the deadline (Issue 08 scope) — quantity/product/lat-lng
+// are immutable after create, and status is route-controlled on cancel. The
+// new deadline must be in the future (same rule as create); the route also
+// enforces "must be later than the current deadline" via isDeadlineExtension.
+describe("extendDemandSchema", () => {
+  const future = "2099-12-31T23:59:59.000Z";
+
+  it("accepts a future deadline", () => {
+    expect(extendDemandSchema.safeParse({ deadline: future }).success).toBe(true);
+  });
+
+  it("rejects a missing deadline", () => {
+    expect(extendDemandSchema.safeParse({}).success).toBe(false);
+  });
+
+  it("rejects a deadline in the past", () => {
+    expect(
+      extendDemandSchema.safeParse({ deadline: "2020-01-01T00:00:00.000Z" })
+        .success
+    ).toBe(false);
+  });
+
+  it("rejects a malformed deadline string", () => {
+    expect(extendDemandSchema.safeParse({ deadline: "next week" }).success).toBe(
+      false
+    );
+  });
+
+  it("rejects unknown top-level fields (strict)", () => {
+    expect(
+      extendDemandSchema.safeParse({ deadline: future, quantity: 50 }).success
     ).toBe(false);
   });
 });

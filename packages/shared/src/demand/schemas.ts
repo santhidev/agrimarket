@@ -37,6 +37,24 @@ export const createDemandSchema = z
   })
   .strict();
 
+// --- Extend (Issue 08) ------------------------------------------------------
+
+/// Request body for PATCH /api/demands/:id. Issue 08 scope is deadline only —
+/// quantity/product/lat-lng are immutable after create, and status flips via
+/// DELETE (cancel). The new deadline must be in the future; the route adds the
+/// "strictly later than the current deadline" check via isDeadlineExtension so
+/// the helper owns the ordering rule (not the schema, which has no cross-field
+/// context).
+export const extendDemandSchema = z
+  .object({
+    deadline: z
+      .string()
+      .min(1)
+      .refine((v) => !Number.isNaN(Date.parse(v)), "รูปแบบวันที่ไม่ถูกต้อง")
+      .refine((v) => Date.parse(v) > Date.now(), "กำหนดปิดรับต้องเป็นวันในอนาคต"),
+  })
+  .strict();
+
 // --- Browse query -----------------------------------------------------------
 
 // z.enum needs a literal tuple; derive it once from the canonical enum.
@@ -85,6 +103,7 @@ export const demandSchema = z.object({
 });
 
 export type CreateDemandInput = z.infer<typeof createDemandSchema>;
+export type ExtendDemandInput = z.infer<typeof extendDemandSchema>;
 export type DemandQuery = z.infer<typeof demandQuerySchema>;
 export type Demand = z.infer<typeof demandSchema>;
 

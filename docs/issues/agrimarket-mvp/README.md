@@ -11,7 +11,7 @@
 | 05 | Catalog: Product suggestions + review | done | 04 |
 | 06 | KYC: Submit + Admin review | done | 02 |
 | 07 | Demand: Create + Browse + Detail | done | 03, 04 |
-| 08 | Demand: Manage (extend/cancel/share) | ready-for-agent | 07 |
+| 08 | Demand: Manage (extend/cancel/share) | done | 07 |
 | 09 | Demand: Auto-expire + Auto-complete (BullMQ) | ready-for-agent | 07 |
 | 10 | Offer: Submit + Edit + Withdraw | ready-for-agent | 06, 07 |
 | 11 | Offer: Competitive bidding view | ready-for-agent | 10 |

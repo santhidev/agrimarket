@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Calendar, MapPin, Package } from "lucide-react";
 import { createInsForgeServerClient } from "@/app/lib/insforge-server";
+import { getCurrentUser } from "@/app/lib/get-profile";
 import { TopNav } from "@/app/components/layout/TopNav";
 import { Footer } from "@/app/components/layout/Footer";
 import { Badge } from "@/app/components/ui/Badge";
@@ -12,14 +13,20 @@ import {
   mapDemand,
   type DemandRow,
 } from "@/app/api/demands/mapping";
+import { OwnerActions } from "./OwnerActions";
 
-// Demand detail page (Issue 07).
+// Demand detail page (Issue 07, extended 08).
 //
 // Reads a single demand server-side. OPEN demands are public; non-OPEN demands
 // are owner-or-admin (RLS), so a hidden row reads as null and surfaces as a
 // 404 via notFound() — existence is never leaked. Offers are not a table yet
 // (#10); the page renders an empty-state placeholder where the offer list will
 // go.
+//
+// Issue 08 adds the owner-action bar (extend deadline / cancel / share). The
+// bar renders only when the viewer is the demand's buyer; the API re-checks
+// ownership (RLS + buyer_id === session.id) on every write, so a forged client
+// can't escalate. A non-owner (or anon) viewer sees the read-only detail.
 export default async function DemandDetailPage({
   params,
 }: {
@@ -40,10 +47,12 @@ export default async function DemandDetailPage({
   }
 
   const demand = mapDemand(row);
+  const current = await getCurrentUser();
+  const isOwner = !!current && current.id === demand.buyerId;
 
   return (
     <div className="bg-surface min-h-screen flex flex-col">
-      <TopNav />
+      <TopNav isLoggedIn={!!current} userName={current?.phone} />
 
       <main className="max-w-3xl mx-auto w-full px-4 md:px-8 py-8 flex-1 space-y-6">
         <div>
@@ -100,8 +109,18 @@ export default async function DemandDetailPage({
           ) : null}
         </Card>
 
+        {isOwner ? (
+          <Card className="p-6">
+            <h2 className="text-lg font-bold text-ink mb-3">จัดการประกาศ</h2>
+            <OwnerActions
+              demandId={demand.id}
+              currentDeadline={demand.deadline}
+            />
+          </Card>
+        ) : null}
+
         <div className="flex gap-3">
-          <Button href="/login" variant="primary">
+          <Button href={current ? `/demands/${demand.id}` : "/login"} variant="primary">
             เสนอขาย
           </Button>
           <Button href="/demands" variant="outline">
