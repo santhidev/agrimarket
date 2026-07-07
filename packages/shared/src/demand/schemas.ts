@@ -74,11 +74,29 @@ export const demandQuerySchema = z.object({
   status: z.enum(STATUS_TUPLE).optional(),
 });
 
+// --- Counter-offer (Issues 11 + 12) -----------------------------------------
+
+/// Request body for POST /api/demands/:id/counter-offer. The buyer sends a
+/// desired price; sellers respond by editing their own offer price down (reuses
+/// PATCH from #10). The counter-offer does NOT change any offer's status — it
+/// only feeds the competitive bidding visibility rule (#11): a seller whose
+/// offer price ≤ the counter-offer price is "accepted" (price visible to
+/// competitors). Unlimited rounds; the latest write wins. The route applies
+/// canEditDemand (OPEN-only) separately — a closed demand stops negotiating.
+export const counterOfferSchema = z
+  .object({
+    pricePerUnit: z.number().positive("ราคาต้องมากกว่า 0"),
+  })
+  .strict();
+
 // --- Read shape (camelCase API contract) ------------------------------------
 
 /// Demand row as returned by the API. Mirrors public.demands + the joined
 /// product name/unit. `offers` is an empty array placeholder for Issue #10
 /// (GET /api/demands/:id returns the demand with its offers inlined).
+/// counterOfferPrice/counterOfferAt are null until the buyer sends a
+/// counter-offer (Issues 11 + 12); once set, the latest values stay until the
+/// buyer sends another round.
 export const demandSchema = z.object({
   id: uuid,
   productId: uuid,
@@ -97,6 +115,8 @@ export const demandSchema = z.object({
   buyerLat: z.number(),
   buyerLng: z.number(),
   deadline: z.string(),
+  counterOfferPrice: z.number().nullable(),
+  counterOfferAt: z.string().nullable(),
   createdAt: z.string(),
   updatedAt: z.string(),
   offers: z.array(z.unknown()).default([]),
@@ -104,6 +124,7 @@ export const demandSchema = z.object({
 
 export type CreateDemandInput = z.infer<typeof createDemandSchema>;
 export type ExtendDemandInput = z.infer<typeof extendDemandSchema>;
+export type CounterOfferInput = z.infer<typeof counterOfferSchema>;
 export type DemandQuery = z.infer<typeof demandQuerySchema>;
 export type Demand = z.infer<typeof demandSchema>;
 

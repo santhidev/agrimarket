@@ -4,6 +4,7 @@ import {
   extendDemandSchema,
   demandQuerySchema,
   demandSchema,
+  counterOfferSchema,
   DemandStatus,
 } from "./schemas";
 
@@ -132,6 +133,8 @@ describe("demandSchema (API read shape)", () => {
     buyerLat: 13.7563,
     buyerLng: 100.5018,
     deadline: "2099-12-31T23:59:59.000Z",
+    counterOfferPrice: null,
+    counterOfferAt: null,
     createdAt: "2026-07-07T00:00:00.000Z",
     updatedAt: "2026-07-07T00:00:00.000Z",
     offers: [],
@@ -199,5 +202,71 @@ describe("extendDemandSchema", () => {
     expect(
       extendDemandSchema.safeParse({ deadline: future, quantity: 50 }).success
     ).toBe(false);
+  });
+});
+
+// counterOfferSchema (Issues 11 + 12): POST /api/demands/:id/counter-offer body.
+// The buyer sends a desired price; sellers respond by editing their own offer
+// price down (reusing PATCH from #10). The price must be positive — a
+// counter-offer of 0 or negative is nonsensical (the buyer is asking sellers to
+// give goods away). The route applies canEditDemand (OPEN-only) separately.
+describe("counterOfferSchema", () => {
+  it("accepts a positive price", () => {
+    expect(counterOfferSchema.safeParse({ pricePerUnit: 20 }).success).toBe(true);
+  });
+
+  it("rejects a missing pricePerUnit", () => {
+    expect(counterOfferSchema.safeParse({}).success).toBe(false);
+  });
+
+  it("rejects a non-positive price", () => {
+    expect(counterOfferSchema.safeParse({ pricePerUnit: 0 }).success).toBe(false);
+    expect(counterOfferSchema.safeParse({ pricePerUnit: -5 }).success).toBe(false);
+  });
+
+  it("rejects unknown top-level fields (strict)", () => {
+    expect(
+      counterOfferSchema.safeParse({ pricePerUnit: 20, note: "pls" }).success
+    ).toBe(false);
+  });
+});
+
+// demandSchema (API read shape) — counter-offer fields (Issues 11 + 12).
+// counterOfferPrice is null until the buyer sends a counter-offer; once set it
+// stays until the buyer sends another (unlimited rounds, latest wins).
+// counterOfferAt is the timestamp of the latest counter-offer.
+describe("demandSchema counter-offer fields", () => {
+  const base = {
+    id: "550e8400-e29b-41d4-a716-446655440000",
+    productId: "660e8400-e29b-41d4-a716-446655440000",
+    productName: "มะม่วงน้ำดอกไม้",
+    unit: "กก.",
+    buyerId: "770e8400-e29b-41d4-a716-446655440000",
+    quantity: 100,
+    pendingQuantity: 100,
+    status: DemandStatus.Open,
+    buyerLat: 13.7563,
+    buyerLng: 100.5018,
+    deadline: "2099-12-31T23:59:59.000Z",
+    createdAt: "2026-07-07T00:00:00.000Z",
+    updatedAt: "2026-07-07T00:00:00.000Z",
+    offers: [],
+  };
+
+  it("accepts a demand with no counter-offer yet (both null)", () => {
+    expect(
+      demandSchema.safeParse({ ...base, counterOfferPrice: null, counterOfferAt: null })
+        .success
+    ).toBe(true);
+  });
+
+  it("accepts a demand with an active counter-offer", () => {
+    expect(
+      demandSchema.safeParse({
+        ...base,
+        counterOfferPrice: 20,
+        counterOfferAt: "2026-07-08T00:00:00.000Z",
+      }).success
+    ).toBe(true);
   });
 });

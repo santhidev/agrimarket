@@ -28,7 +28,8 @@ export type DemandOfferRow = {
 // Joined demand row from public.demands + public.products + public.offers. The
 // product join is inner because every demand references a real product (FK on
 // delete restrict). The offers join is outer-equivalent (an empty array, not
-// null, when the demand has no offers).
+// null, when the demand has no offers). counter_offer_price/counter_offer_at
+// are null until the buyer sends a counter-offer (Issues 11 + 12).
 export type DemandRow = {
   id: string;
   product_id: string;
@@ -39,6 +40,8 @@ export type DemandRow = {
   buyer_lat: number;
   buyer_lng: number;
   deadline: string;
+  counter_offer_price: string | number | null;
+  counter_offer_at: string | null;
   created_at: string;
   updated_at: string;
   product: { name: string; unit: string };
@@ -51,7 +54,7 @@ export type DemandRow = {
 // runs under the caller's RLS, so a buyer sees all their demand's offers and a
 // non-buyer sees an empty array.
 export const DEMAND_SELECT =
-  "id, product_id, buyer_id, quantity, pending_quantity, status, buyer_lat, buyer_lng, deadline, created_at, updated_at, product:products(name, unit), offers:offers(id, seller_id, product_grade_id, price_per_unit, quantity, accepted_quantity, status, pickup_lat, pickup_lng, ready_date, created_at, updated_at, offer_photos(url, key, sort_order))";
+  "id, product_id, buyer_id, quantity, pending_quantity, status, buyer_lat, buyer_lng, deadline, counter_offer_price, counter_offer_at, created_at, updated_at, product:products(name, unit), offers:offers(id, seller_id, product_grade_id, price_per_unit, quantity, accepted_quantity, status, pickup_lat, pickup_lng, ready_date, created_at, updated_at, offer_photos(url, key, sort_order))";
 
 export function mapDemand(row: DemandRow) {
   return {
@@ -66,6 +69,16 @@ export function mapDemand(row: DemandRow) {
     buyerLat: row.buyer_lat,
     buyerLng: row.buyer_lng,
     deadline: row.deadline,
+    // Issues 11 + 12: counter-offer price + timestamp. Numeric comes back as a
+    // string from PostgREST when the column is numeric(12,2) — coerce to Number
+    // for the camelCase API contract (null stays null).
+    counterOfferPrice:
+      row.counter_offer_price === null
+        ? null
+        : typeof row.counter_offer_price === "string"
+          ? Number(row.counter_offer_price)
+          : row.counter_offer_price,
+    counterOfferAt: row.counter_offer_at,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
     // Issue 10: offers are now embedded. A buyer sees all offers on their

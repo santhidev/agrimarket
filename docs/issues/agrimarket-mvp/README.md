@@ -14,8 +14,8 @@
 | 08 | Demand: Manage (extend/cancel/share) | done | 07 |
 | 09 | Demand: Auto-expire + Auto-complete (BullMQ) | ready-for-agent | 07 |
 | 10 | Offer: Submit + Edit + Withdraw | ready-for-agent | 06, 07 |
-| 11 | Offer: Competitive bidding view | ready-for-agent | 10 |
-| 12 | Counter-offer | ready-for-agent | 10 |
+| 11 | Offer: Competitive bidding view | done | 10 |
+| 12 | Counter-offer | done | 10 |
 | 13 | Best Offer: Bounded Knapsack | ready-for-agent | 10 |
 | 14 | Select offers + Seller confirmation | ready-for-agent | 13 |
 | 15 | Auto-decline (24h) + Match + Contact | ready-for-agent | 14 |

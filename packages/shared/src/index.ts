@@ -23,11 +23,13 @@ export * from "./catalog/schemas";
 export * from "./catalog/suggestion-schemas";
 
 // Demand: lifecycle enums, zod schemas, transitions (Issue 07, extended 08),
-// background-job predicates (Issue 09 auto-expire/complete).
+// background-job predicates (Issue 09 auto-expire/complete), counter-offer
+// acceptance threshold (Issues 11 + 12).
 export * from "./demand/enums";
 export * from "./demand/schemas";
 export * from "./demand/demand-transitions";
 export * from "./demand/demand-jobs";
+export * from "./demand/counter-offer";
 
 // Offer: lifecycle enums + transitions (Issue 08 vocabulary for the demand-
 // cancel cascade + offer-acceptance gate; the offers table lands in #10) +

@@ -68,3 +68,6 @@ pnpm-debug.log*
 
 # Playwright MCP snapshots (artifacts)
 .playwright-mcp/
+
+# ZCode CLI artifacts (local tooling, not source)
+.zcode/
