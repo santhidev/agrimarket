@@ -30,6 +30,8 @@ export * from "./demand/demand-transitions";
 export * from "./demand/demand-jobs";
 
 // Offer: lifecycle enums + transitions (Issue 08 vocabulary for the demand-
-// cancel cascade + offer-acceptance gate; the offers table lands in #10).
+// cancel cascade + offer-acceptance gate; the offers table lands in #10) +
+// schemas + edit/withdraw gates (Issue 10).
 export * from "./offer/enums";
 export * from "./offer/offer-transitions";
+export * from "./offer/schemas";

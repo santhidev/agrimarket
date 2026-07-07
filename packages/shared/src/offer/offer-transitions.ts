@@ -40,3 +40,28 @@ export function shouldCancelOfferOnDemandCancel(status: OfferStatus): boolean {
     status === OfferStatus.Confirmed
   );
 }
+
+// --- Can the seller still edit this offer? (Issue 10) -----------------------
+
+/// True only for ACTIVE. Once the buyer selects (PENDING_SELLER_CONFIRMATION)
+/// the terms are locked — the seller can't shift price/quantity under a buyer
+/// who just chose them. CONFIRMED and terminal statuses are obviously locked.
+/// Issue 10's PATCH route gates on this before touching any field.
+export function canEditOffer(status: OfferStatus): boolean {
+  return status === OfferStatus.Active;
+}
+
+// --- Can the seller withdraw this offer? (Issue 10) -------------------------
+
+/// True for ACTIVE, PENDING_SELLER_CONFIRMATION, and CONFIRMED — the seller
+/// can still pull out of the running before the deal locks. MATCHED is locked
+/// (the deal is done; withdrawal would break a matched transaction). Terminal
+/// statuses can't withdraw (WITHDRAWN is already withdrawn, etc.). Issue 10's
+/// DELETE route gates on this before flipping to WITHDRAWN.
+export function canWithdrawOffer(status: OfferStatus): boolean {
+  return (
+    status === OfferStatus.Active ||
+    status === OfferStatus.PendingSellerConfirmation ||
+    status === OfferStatus.Confirmed
+  );
+}
