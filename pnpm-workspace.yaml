@@ -2,8 +2,12 @@ packages:
   - 'apps/*'
   - 'packages/*'
 
-allowBuilds:
-  esbuild: set this to true or false
+# pnpm v10+ blocks dependency install scripts by default (ERR_PNPM_IGNORED_BUILDS).
+# We control the full dependency tree, so allow all build scripts rather than
+# maintaining an allow-list that drifts per platform/Node version. The explicit
+# list below documents *why* each is needed; dangerouslyAllowAllBuilds is the
+# CI/deploy-friendly escape hatch.
+dangerouslyAllowAllBuilds: true
 
 # Allow these packages to run install-time build scripts (postinstall).
 # Prisma needs its postinstall to fetch the query engine; sharp is needed by
