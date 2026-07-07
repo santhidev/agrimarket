@@ -36,20 +36,21 @@ export async function POST(
 
   const client = await createInsForgeServerClient();
 
-  // Load first to distinguish 404 from 409.
+  // Load first to distinguish 404 from 409. .single() returns BOTH an error
+  // (PGRST116) and null data when 0 rows match, so a missing id reaches here as
+  // an error — treat that as 404, not 500.
   const { data: existing, error: findErr } = await client.database
     .from("product_suggestions")
     .select(SUGGESTION_SELECT)
     .eq("id", id)
     .single();
 
-  if (findErr) {
-    return NextResponse.json({ error: "Failed to load suggestion" }, { status: 500 });
-  }
-
   const current = existing as ProductSuggestionRow | null;
   if (!current) {
     return NextResponse.json({ error: "Suggestion not found" }, { status: 404 });
+  }
+  if (findErr) {
+    return NextResponse.json({ error: "Failed to load suggestion" }, { status: 500 });
   }
   if (current.status !== "PENDING") {
     return NextResponse.json(

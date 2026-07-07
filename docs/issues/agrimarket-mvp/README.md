@@ -8,8 +8,8 @@
 | 02 | Auth: Phone OTP login | done | 01 |
 | 03 | User profile + admin bootstrap | done | 02 |
 | 04 | Catalog: Products + Grades CRUD | done | 01 |
-| 05 | Catalog: Product suggestions + review | ready-for-agent | 04 |
-| 06 | KYC: Submit + Admin review | ready-for-agent | 02 |
+| 05 | Catalog: Product suggestions + review | done | 04 |
+| 06 | KYC: Submit + Admin review | done | 02 |
 | 07 | Demand: Create + Browse + Detail | ready-for-agent | 03, 04 |
 | 08 | Demand: Manage (extend/cancel/share) | ready-for-agent | 07 |
 | 09 | Demand: Auto-expire + Auto-complete (BullMQ) | ready-for-agent | 07 |

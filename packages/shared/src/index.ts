@@ -9,8 +9,11 @@ export const SHARED_PACKAGE_VERSION = "0.0.0";
 export * from "./auth/schemas";
 export * from "./auth/normalize-phone";
 
-// User enums (CreditTier, KycStatus).
+// User enums (CreditTier, KycStatus) + KYC submissions (Issue 06).
 export * from "./users/enums";
+export * from "./users/kyc-status";
+export * from "./users/kyc-transitions";
+export * from "./users/kyc-schemas";
 
 // Catalog: product/grade zod schemas + default-grade helper (Issue 04).
 export * from "./catalog/default-grade";
