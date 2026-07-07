@@ -21,3 +21,8 @@ export * from "./catalog/schemas";
 
 // Catalog: product suggestions (Issue 05).
 export * from "./catalog/suggestion-schemas";
+
+// Demand: lifecycle enums, zod schemas, transitions (Issue 07).
+export * from "./demand/enums";
+export * from "./demand/schemas";
+export * from "./demand/demand-transitions";

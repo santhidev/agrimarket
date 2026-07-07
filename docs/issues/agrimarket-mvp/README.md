@@ -10,7 +10,7 @@
 | 04 | Catalog: Products + Grades CRUD | done | 01 |
 | 05 | Catalog: Product suggestions + review | done | 04 |
 | 06 | KYC: Submit + Admin review | done | 02 |
-| 07 | Demand: Create + Browse + Detail | ready-for-agent | 03, 04 |
+| 07 | Demand: Create + Browse + Detail | done | 03, 04 |
 | 08 | Demand: Manage (extend/cancel/share) | ready-for-agent | 07 |
 | 09 | Demand: Auto-expire + Auto-complete (BullMQ) | ready-for-agent | 07 |
 | 10 | Offer: Submit + Edit + Withdraw | ready-for-agent | 06, 07 |
