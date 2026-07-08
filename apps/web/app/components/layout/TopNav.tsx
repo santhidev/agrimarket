@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Bell, ChevronDown, Leaf, Plus } from "lucide-react";
 import { signOutAction } from "@/app/login/actions";
 import { Avatar } from "@/app/components/ui/Avatar";
+import { NotificationsBell } from "@/app/components/notifications/NotificationsBell";
 
 const NAV_ITEMS = [
   { label: "หน้าแรก", href: "/" },
@@ -22,9 +23,11 @@ const NAV_ITEMS = [
 export function TopNav({
   isLoggedIn = false,
   userName = "",
+  userId,
 }: {
   isLoggedIn?: boolean;
   userName?: string;
+  userId?: string;
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -53,14 +56,17 @@ export function TopNav({
 
       {/* Right cluster */}
       <div className="flex items-center gap-1 md:gap-2 ml-auto shrink-0">
-        <Link
-          href={isLoggedIn ? "/dashboard" : "/login"}
-          className="relative p-2 rounded-lg hover:bg-surface text-ink"
-          aria-label="แจ้งเตือน"
-        >
-          <Bell size={20} aria-hidden="true" />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-accent" aria-hidden="true" />
-        </Link>
+        {isLoggedIn && userId ? (
+          <NotificationsBell userId={userId} />
+        ) : (
+          <Link
+            href={isLoggedIn ? "/dashboard" : "/login"}
+            className="relative p-2 rounded-lg hover:bg-surface text-ink"
+            aria-label="แจ้งเตือน"
+          >
+            <Bell size={20} aria-hidden="true" />
+          </Link>
+        )}
 
         <Link
           href={isLoggedIn ? "/demands/new" : "/login"}
