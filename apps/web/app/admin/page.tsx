@@ -37,7 +37,7 @@ export default async function AdminPage() {
 
   return (
     <div className="bg-surface min-h-screen flex flex-col">
-      <TopNav isLoggedIn userName={current.phone} />
+      <TopNav isLoggedIn userName={current.phone} userId={current.id} />
 
       <header className="bg-green-700">
         <div className="max-w-6xl mx-auto px-4 md:px-8 py-8">

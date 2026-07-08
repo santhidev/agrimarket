@@ -34,7 +34,7 @@ export default async function DemandsPage() {
   if (error) {
     return (
       <div className="bg-surface min-h-screen">
-        <TopNav isLoggedIn={!!current} userName={current?.phone} />
+        <TopNav isLoggedIn={!!current} userName={current?.phone} userId={current?.id} />
         <main className="max-w-6xl mx-auto px-4 md:px-8 py-16 text-center">
           <p className="text-error">ไม่สามารถโหลดรายการประกาศรับซื้อได้</p>
         </main>
@@ -64,7 +64,7 @@ export default async function DemandsPage() {
 
   return (
     <div className="bg-surface min-h-screen flex flex-col">
-      <TopNav isLoggedIn={!!current} userName={current?.phone} />
+      <TopNav isLoggedIn={!!current} userName={current?.phone} userId={current?.id} />
 
       <header className="bg-white border-b border-line">
         <div className="max-w-6xl mx-auto px-4 md:px-8 py-8 flex items-center justify-between gap-3">

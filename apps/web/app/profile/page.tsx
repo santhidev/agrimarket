@@ -30,7 +30,7 @@ export default async function ProfilePage() {
 
   return (
     <div className="bg-surface min-h-screen flex flex-col">
-      <TopNav isLoggedIn userName={displayName} />
+      <TopNav isLoggedIn userName={displayName} userId={current.id} />
 
       {/* Profile header */}
       <header className="bg-green-700">
