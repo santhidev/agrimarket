@@ -9,6 +9,8 @@ import {
   canSellerConfirm,
   canSellerDecline,
   shouldResetOnReselect,
+  allSelectedOffersConfirmed,
+  shouldRejectOnMatch,
 } from "./offer-transitions";
 
 // Pure offer lifecycle helpers (Issue 08).
@@ -207,5 +209,82 @@ describe("shouldResetOnReselect", () => {
     expect(shouldResetOnReselect(OfferStatus.Expired)).toBe(false);
     expect(shouldResetOnReselect(OfferStatus.Cancelled)).toBe(false);
     expect(shouldResetOnReselect(OfferStatus.Declined)).toBe(false);
+  });
+});
+
+// allSelectedOffersConfirmed (Issue 15): the buyer may lock the deal
+// (POST /api/demands/:id/match) only when there is at least one chosen offer
+// and every chosen offer has been confirmed by its seller — no seller is still
+// pending. ACTIVE offers aren't "chosen" (the buyer hasn't picked them into the
+// selection); empty / all-ACTIVE demand has nothing to lock.
+describe("allSelectedOffersConfirmed", () => {
+  it("is true when every chosen offer is CONFIRMED", () => {
+    expect(
+      allSelectedOffersConfirmed([
+        { status: OfferStatus.Confirmed },
+        { status: OfferStatus.Confirmed },
+      ])
+    ).toBe(true);
+  });
+
+  it("is false when one chosen offer is still PENDING_SELLER_CONFIRMATION", () => {
+    expect(
+      allSelectedOffersConfirmed([
+        { status: OfferStatus.Confirmed },
+        { status: OfferStatus.PendingSellerConfirmation },
+      ])
+    ).toBe(false);
+  });
+
+  it("is true when all chosen are CONFIRMED, ignoring ACTIVE offers", () => {
+    // ACTIVE offers are not part of the selection — they don't block the lock.
+    expect(
+      allSelectedOffersConfirmed([
+        { status: OfferStatus.Confirmed },
+        { status: OfferStatus.Active },
+      ])
+    ).toBe(true);
+  });
+
+  it("is false when no offer is chosen (empty list)", () => {
+    expect(allSelectedOffersConfirmed([])).toBe(false);
+  });
+
+  it("is false when only ACTIVE offers exist (nothing selected)", () => {
+    expect(
+      allSelectedOffersConfirmed([
+        { status: OfferStatus.Active },
+        { status: OfferStatus.Active },
+      ])
+    ).toBe(false);
+  });
+});
+
+// shouldRejectOnMatch (Issue 15): when the deal locks (match), the in-handshake
+// offers that aren't part of the matched selection drop out of the running and
+// flip to REJECTED. PENDING_SELLER_CONFIRMATION + CONFIRMED are the chosen
+// statuses; ACTIVE offers keep competing (a MATCHED demand stops accepting
+// offers, but the seller isn't rejected — they just didn't win); terminal
+// statuses are left as-is. Mirrors shouldResetOnReselect on the match path.
+describe("shouldRejectOnMatch", () => {
+  it("rejects PENDING_SELLER_CONFIRMATION offers (mid-handshake, not matched)", () => {
+    expect(shouldRejectOnMatch(OfferStatus.PendingSellerConfirmation)).toBe(true);
+  });
+
+  it("rejects CONFIRMED offers (seller said yes — but not in the matched set)", () => {
+    expect(shouldRejectOnMatch(OfferStatus.Confirmed)).toBe(true);
+  });
+
+  it("leaves ACTIVE offers (still freely competing)", () => {
+    expect(shouldRejectOnMatch(OfferStatus.Active)).toBe(false);
+  });
+
+  it("leaves terminal offers untouched", () => {
+    expect(shouldRejectOnMatch(OfferStatus.Matched)).toBe(false);
+    expect(shouldRejectOnMatch(OfferStatus.Withdrawn)).toBe(false);
+    expect(shouldRejectOnMatch(OfferStatus.Rejected)).toBe(false);
+    expect(shouldRejectOnMatch(OfferStatus.Expired)).toBe(false);
+    expect(shouldRejectOnMatch(OfferStatus.Cancelled)).toBe(false);
+    expect(shouldRejectOnMatch(OfferStatus.Declined)).toBe(false);
   });
 });

@@ -111,3 +111,53 @@ export function shouldResetOnReselect(status: OfferStatus): boolean {
     status === OfferStatus.Confirmed
   );
 }
+
+// --- Match lock (Issue 15) --------------------------------------------------
+//
+// Once every chosen seller has confirmed (all selected offers are CONFIRMED),
+// the buyer locks the deal via POST /api/demands/:id/match → Demand MATCHED +
+// the selected offers MATCHED (self-pickup: the system hands the buyer the
+// sellers' phone numbers, no in-app payment). The two predicates below are the
+// match precondition and the match-lock cascade:
+//   - allSelectedOffersConfirmed: the buyer may only match when there is at
+//     least one chosen offer and every chosen offer is CONFIRMED (no seller
+//     still pending). ACTIVE-only or empty demand → nothing to lock.
+//   - shouldRejectOnMatch: when the deal locks, the remaining chosen offers
+//     (still PENDING_SELLER_CONFIRMATION or CONFIRMED but not in the matched
+//     selection) drop out of the running and flip to REJECTED. CONTEXT.md
+//     reserves REJECTED for exactly this; #14 never sets it. ACTIVE offers are
+//     left as-is (a MATCHED demand stops accepting offers, so they wither —
+//     they are not force-rejected).
+
+/// Match precondition: there is at least one chosen offer (PENDING_SELLER_
+/// CONFIRMATION or CONFIRMED) and none of them is still PENDING_SELLER_
+/// CONFIRMATION — i.e. every seller the buyer is waiting on has said yes.
+/// Offers with no selection (ACTIVE, MATCHED, terminal) are ignored; an empty
+/// list or a list with only ACTIVE offers returns false (nothing to lock).
+export function allSelectedOffersConfirmed(
+  offers: { status: string }[]
+): boolean {
+  const chosen = offers.filter(
+    (o) =>
+      o.status === OfferStatus.PendingSellerConfirmation ||
+      o.status === OfferStatus.Confirmed
+  );
+  if (chosen.length === 0) return false;
+  return chosen.every(
+    (o) => o.status === OfferStatus.Confirmed
+  );
+}
+
+/// True for PENDING_SELLER_CONFIRMATION and CONFIRMED — the in-handshake
+/// statuses that must drop out of the running (→ REJECTED) when a competing
+/// selection locks the deal. ACTIVE offers keep competing (a MATCHED demand
+/// stops accepting offers, but the seller isn't rejected — they just didn't
+/// win this time); terminal statuses are left as-is (they already ended).
+/// Symmetric with shouldResetOnReselect but on the match path instead of the
+/// re-select path.
+export function shouldRejectOnMatch(status: OfferStatus): boolean {
+  return (
+    status === OfferStatus.PendingSellerConfirmation ||
+    status === OfferStatus.Confirmed
+  );
+}

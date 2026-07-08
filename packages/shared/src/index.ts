@@ -37,8 +37,10 @@ export * from "./demand/best-offer";
 // Offer: lifecycle enums + transitions (Issue 08 vocabulary for the demand-
 // cancel cascade + offer-acceptance gate; the offers table lands in #10) +
 // schemas + edit/withdraw gates (Issue 10) + buyer-select/seller-confirm
-// gates + selection quantity validation (Issue 14).
+// gates + selection quantity validation (Issue 14) + 24h auto-decline job
+// predicate (Issue 15).
 export * from "./offer/enums";
 export * from "./offer/offer-transitions";
 export * from "./offer/schemas";
 export * from "./offer/select";
+export * from "./offer/offer-jobs";
