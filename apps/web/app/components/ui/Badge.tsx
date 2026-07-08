@@ -27,9 +27,15 @@ export function Badge({ status }: { status: StatusKey }) {
   const s = STATUS[status];
   return (
     <span
-      className="inline-flex items-center px-2.5 py-0.5 rounded-chip text-xs font-semibold"
+      className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-chip text-xs font-semibold"
       style={{ color: `var(${s.colorVar})`, backgroundColor: `var(${s.bgVar})` }}
     >
+      {/* Dot reinforces meaning so it isn't carried by color alone. */}
+      <span
+        className="w-1.5 h-1.5 rounded-full"
+        style={{ backgroundColor: `var(${s.colorVar})` }}
+        aria-hidden="true"
+      />
       {s.label}
     </span>
   );

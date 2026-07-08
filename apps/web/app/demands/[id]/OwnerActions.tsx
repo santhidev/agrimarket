@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { CalendarClock, Share2, Trash2 } from "lucide-react";
+import { Button } from "@/app/components/ui/Button";
 
 // Owner-only actions on a demand detail (Issue 08).
 //
@@ -115,51 +116,46 @@ export function OwnerActions({
             ปิดรับปัจจุบัน: {new Date(currentDeadline).toLocaleString("th-TH")}
           </p>
           <div className="flex gap-2">
-            <button
-              type="submit"
-              disabled={busy !== null}
-              className="inline-flex items-center justify-center gap-2 bg-green-600 text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
+            <Button type="submit" size="sm" disabled={busy !== null}>
               บันทึก
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
+              variant="ghost"
+              size="sm"
               onClick={() => {
                 setShowExtend(false);
                 setExtendDeadline("");
                 setError(null);
               }}
-              className="inline-flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold text-muted hover:bg-surface"
             >
               ยกเลิก
-            </button>
+            </Button>
           </div>
         </form>
       ) : (
         <div className="flex flex-wrap gap-2">
-          <button
+          <Button
             type="button"
+            variant="outline"
+            size="sm"
             onClick={() => setShowExtend(true)}
             disabled={busy !== null}
-            className="inline-flex items-center gap-2 border border-green-600 text-green-600 px-4 py-2 rounded-xl text-sm font-semibold hover:bg-green-50 disabled:opacity-50"
           >
-            <CalendarClock size={16} /> ขยายเวลา
-          </button>
-          <button
+            <CalendarClock size={16} aria-hidden="true" /> ขยายเวลา
+          </Button>
+          <Button type="button" variant="secondary" size="sm" onClick={handleShare}>
+            <Share2 size={16} aria-hidden="true" /> {copied ? "คัดลอกแล้ว!" : "แชร์"}
+          </Button>
+          <Button
             type="button"
-            onClick={handleShare}
-            className="inline-flex items-center gap-2 border border-line text-ink px-4 py-2 rounded-xl text-sm font-semibold hover:bg-surface"
-          >
-            <Share2 size={16} /> {copied ? "คัดลอกแล้ว!" : "แชร์"}
-          </button>
-          <button
-            type="button"
+            variant="danger"
+            size="sm"
             onClick={handleCancel}
             disabled={busy !== null}
-            className="inline-flex items-center gap-2 bg-error text-white px-4 py-2 rounded-xl text-sm font-semibold hover:opacity-90 disabled:opacity-50"
           >
-            <Trash2 size={16} /> ยกเลิกประกาศ
-          </button>
+            <Trash2 size={16} aria-hidden="true" /> ยกเลิกประกาศ
+          </Button>
         </div>
       )}
 

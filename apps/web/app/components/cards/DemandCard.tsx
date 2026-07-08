@@ -38,14 +38,14 @@ export function DemandCard({ demand }: { demand: Demand }) {
         <h4 className="font-semibold text-ink">{demand.product}</h4>
         <p className="text-xs text-muted">รับซื้อ {demand.quantity}</p>
 
-        <p className="text-lg font-bold text-accent">{demand.priceLabel}</p>
+        <p className="text-lg font-bold text-accent tnum">{demand.priceLabel}</p>
 
         <div className="flex items-center gap-3 text-xs text-muted">
           <span className="flex items-center gap-1">
-            <Clock size={12} /> {demand.deadlineLabel}
+            <Clock size={12} aria-hidden="true" /> {demand.deadlineLabel}
           </span>
           <span className="flex items-center gap-1">
-            <MapPin size={12} /> {demand.distanceLabel}
+            <MapPin size={12} aria-hidden="true" /> {demand.distanceLabel}
           </span>
         </div>
         <span className="block text-xs text-muted">{demand.offerCount} เสนอ</span>

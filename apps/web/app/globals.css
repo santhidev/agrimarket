@@ -1,68 +1,88 @@
 @import "tailwindcss";
 
 /* ───────────────────────────────────────────────────────────────
-   AgriMarket design tokens (from Figma Make spec)
-   Palette: warm-green marketplace, orange price accent, generous
-   whitespace. Semantic status colors drive demand/offer badges.
+   AgriMarket design tokens
+   Direction: natural, warm, professional — a real agricultural
+   marketplace, not a SaaS template. Cream surfaces, clay accents,
+   forest greens. All colors live here so components never embed
+   raw hex. Status palette drives demand/offer badges.
    ─────────────────────────────────────────────────────────────── */
 @theme {
   --font-sans: var(--font-inter), var(--font-noto-thai), ui-sans-serif,
     system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 
-  /* Brand — green */
-  --color-green-50: #e8f5e9;
-  --color-green-100: #c8e6c9;
-  --color-green-200: #a5d6a7;
-  --color-green-500: #388e3c;
-  --color-green-600: #2e7d32;
-  --color-green-700: #1b5e20;
+  /* Brand — forest greens (primary) */
+  --color-green-50: #e8f0e5;
+  --color-green-100: #d2e1cc;
+  --color-green-200: #aac5a0;
+  --color-green-500: #3f8050;
+  --color-green-600: #2f6b3a;
+  --color-green-700: #234e2b;
 
-  /* Accent — orange (price / CTA) */
-  --color-accent: #f9a825;
-  --color-accent-light: #fff8e1;
+  /* Accent — clay (price / CTA), warmer than saturated orange */
+  --color-accent: #c2682b;
+  --color-accent-light: #faf1e4;
 
-  /* Neutral */
-  --color-surface: #f5f7f5;
-  --color-ink: #1f2a1d;
-  --color-muted: #6b7b69;
-  --color-line: rgba(0, 0, 0, 0.08);
+  /* Neutral — warm cream/stone instead of cool gray */
+  --color-surface: #faf7f0;
+  --color-ink: #23291f;
+  --color-muted: #6b7367;
+  --color-line: rgba(35, 41, 31, 0.1);
 
   /* Admin */
-  --color-admin: #1b3a1b;
+  --color-admin: #234e2b;
 
   /* Semantic */
-  --color-success: #2e7d32;
-  --color-warn: #f9a825;
-  --color-error: #c62828;
-  --color-info: #1565c0;
+  --color-success: #2f6b3a;
+  --color-warn: #c2682b;
+  --color-error: #b23a2e;
+  --color-info: #2c5f8c;
 
   --radius-card: 0.75rem; /* 12px */
   --radius-chip: 999px;
   --radius-modal: 1rem; /* 16px */
+
+  /* Elevation scale — used via shadow-sm/md/lg utilities. */
+  --shadow-sm: 0 1px 2px rgba(35, 41, 31, 0.06);
+  --shadow-md: 0 2px 8px rgba(35, 41, 31, 0.08);
+  --shadow-lg: 0 8px 24px rgba(35, 41, 31, 0.1);
 }
 
-/* Status badge palette — referenced by the Badge component. */
+/* Status badge palette — referenced by the Badge component. Each
+   status pairs a readable foreground with a soft tinted background;
+   meaning is never carried by color alone (Badge also renders a dot).
+   The kyc-* pairs mirror this for the profile header KYC pill. */
 :root {
-  --st-open: #2e7d32;
-  --st-open-bg: #e8f5e9;
-  --st-matched: #1565c0;
-  --st-matched-bg: #e3f2fd;
-  --st-completed: #555555;
-  --st-completed-bg: #eeeeee;
-  --st-expired: #777777;
-  --st-expired-bg: #e0e0e0;
-  --st-cancelled: #c62828;
-  --st-cancelled-bg: #ffeeee;
-  --st-active: #388e3c;
-  --st-active-bg: #f1f8e9;
-  --st-pending: #f57f17;
-  --st-pending-bg: #fff8e1;
-  --st-confirmed: #2e7d32;
-  --st-confirmed-bg: #e8f5e9;
-  --st-selected: #1b5e20;
-  --st-selected-bg: #c8e6c9;
-  --st-declined: #c62828;
-  --st-declined-bg: #ffeeee;
+  --st-open: #2f6b3a;
+  --st-open-bg: #e8f0e5;
+  --st-matched: #2c5f8c;
+  --st-matched-bg: #e3eef6;
+  --st-completed: #6b7367;
+  --st-completed-bg: #ece9e1;
+  --st-expired: #8a8a82;
+  --st-expired-bg: #e8e5dd;
+  --st-cancelled: #b23a2e;
+  --st-cancelled-bg: #f6e3e0;
+  --st-active: #3f8050;
+  --st-active-bg: #e8f0e5;
+  --st-pending: #9a6a1f;
+  --st-pending-bg: #faf1e4;
+  --st-confirmed: #2f6b3a;
+  --st-confirmed-bg: #e8f0e5;
+  --st-selected: #234e2b;
+  --st-selected-bg: #d2e1cc;
+  --st-declined: #b23a2e;
+  --st-declined-bg: #f6e3e0;
+
+  /* KYC pill on the profile/dashboard header (dark forest background). */
+  --kyc-none-fg: #e8f0e5;
+  --kyc-none-bg: rgba(255, 255, 255, 0.15);
+  --kyc-pending-fg: #faf1e4;
+  --kyc-pending-bg: #9a6a1f;
+  --kyc-approved-fg: #ffffff;
+  --kyc-approved-bg: #3f8050;
+  --kyc-rejected-fg: #f6e3e0;
+  --kyc-rejected-bg: #b23a2e;
 }
 
 @layer base {
@@ -84,6 +104,11 @@
   :focus-visible {
     outline: 2px solid var(--color-green-600);
     outline-offset: 2px;
+  }
+
+  /* Tabular figures in data-dense contexts keep prices/counts aligned. */
+  .tnum {
+    font-variant-numeric: tabular-nums;
   }
 }
 

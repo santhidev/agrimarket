@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Megaphone } from "lucide-react";
 import { TopNav } from "@/app/components/layout/TopNav";
 import { Footer } from "@/app/components/layout/Footer";
+import { Button } from "@/app/components/ui/Button";
 import { Card } from "@/app/components/ui/Card";
 
 // Demand create form (Issue 07).
@@ -104,7 +105,7 @@ export default function NewDemandPage() {
       <main className="max-w-xl mx-auto w-full px-4 md:px-8 py-8 flex-1">
         <div className="flex items-center gap-3 mb-6">
           <span className="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center">
-            <Megaphone size={20} className="text-green-600" />
+            <Megaphone size={20} className="text-green-700" aria-hidden="true" />
           </span>
           <div>
             <h1 className="text-2xl font-bold text-ink">ประกาศรับซื้อ</h1>
@@ -121,7 +122,7 @@ export default function NewDemandPage() {
                 value={productId}
                 onChange={(e) => setProductId(e.target.value)}
                 required
-                className="w-full px-3 py-2 bg-surface border border-line rounded-xl text-sm text-ink outline-none focus:border-green-600"
+                className={FIELD_CLASS}
               >
                 {products.length === 0 && <option value="">กำลังโหลด…</option>}
                 {products.map((p) => (
@@ -141,7 +142,7 @@ export default function NewDemandPage() {
                 onChange={(e) => setQuantity(e.target.value)}
                 placeholder="เช่น 100"
                 required
-                className="w-full px-3 py-2 bg-surface border border-line rounded-xl text-sm text-ink outline-none focus:border-green-600"
+                className={FIELD_CLASS}
               />
             </Field>
 
@@ -151,7 +152,7 @@ export default function NewDemandPage() {
                 value={deadline}
                 onChange={(e) => setDeadline(e.target.value)}
                 required
-                className="w-full px-3 py-2 bg-surface border border-line rounded-xl text-sm text-ink outline-none focus:border-green-600"
+                className={FIELD_CLASS}
               />
             </Field>
 
@@ -164,7 +165,7 @@ export default function NewDemandPage() {
                   onChange={(e) => setBuyerLat(e.target.value)}
                   placeholder="13.7563"
                   required
-                  className="w-full px-3 py-2 bg-surface border border-line rounded-xl text-sm text-ink outline-none focus:border-green-600"
+                  className={FIELD_CLASS}
                 />
               </Field>
               <Field label="ลองจิจูด">
@@ -175,7 +176,7 @@ export default function NewDemandPage() {
                   onChange={(e) => setBuyerLng(e.target.value)}
                   placeholder="100.5018"
                   required
-                  className="w-full px-3 py-2 bg-surface border border-line rounded-xl text-sm text-ink outline-none focus:border-green-600"
+                  className={FIELD_CLASS}
                 />
               </Field>
             </div>
@@ -187,19 +188,12 @@ export default function NewDemandPage() {
             )}
 
             <div className="flex gap-3 pt-2">
-              <button
-                type="submit"
-                disabled={submitting}
-                className="inline-flex items-center justify-center gap-2 bg-green-600 text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
+              <Button type="submit" disabled={submitting}>
                 {submitting ? "กำลังสร้าง…" : "ประกาศรับซื้อ"}
-              </button>
-              <Link
-                href="/demands"
-                className="inline-flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold text-muted hover:bg-surface"
-              >
+              </Button>
+              <Button href="/demands" variant="ghost">
                 ยกเลิก
-              </Link>
+              </Button>
             </div>
           </form>
         </Card>
@@ -210,6 +204,11 @@ export default function NewDemandPage() {
   );
 }
 
+// Shared field style — matches the Input primitive so selects and native
+// date/number inputs read as the same component.
+const FIELD_CLASS =
+  "w-full px-3 py-2.5 bg-surface border border-line rounded-xl text-sm text-ink outline-none transition-colors focus:border-green-600 min-w-0";
+
 function Field({
   label,
   children,
@@ -218,9 +217,14 @@ function Field({
   children: React.ReactNode;
 }) {
   return (
-    <div>
-      <label className="block mb-2 text-sm font-semibold text-ink">{label}</label>
+    <label className="block">
+      <span className="block mb-2 text-sm font-semibold text-ink">
+        {label}
+        <span className="text-error ml-0.5" aria-hidden="true">
+          *
+        </span>
+      </span>
       {children}
-    </div>
+    </label>
   );
 }

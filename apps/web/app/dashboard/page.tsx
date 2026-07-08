@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { CheckCircle, FileText, Heart, LogOut, Package, ShieldCheck, Star } from "lucide-react";
+import { ArrowRight, CheckCircle, FileText, Heart, LogOut, Package, ShieldCheck, Star } from "lucide-react";
 import { getCurrentUser } from "@/app/lib/get-profile";
 import { signOutAction } from "@/app/login/actions";
 import { TopNav } from "@/app/components/layout/TopNav";
@@ -33,27 +33,22 @@ export default async function DashboardPage() {
       <TopNav isLoggedIn userName={displayName} />
 
       {/* Profile header */}
-      <header
-        className="relative overflow-hidden"
-        style={{
-          background: "linear-gradient(135deg, #1B5E20 0%, #2E7D32 100%)",
-        }}
-      >
+      <header className="bg-green-700">
         <div className="max-w-6xl mx-auto px-4 md:px-8 py-10 flex items-center gap-5">
           <Avatar name={displayName} size="lg" />
           <div className="min-w-0">
             <h1 className="text-white text-2xl font-bold truncate">{displayName}</h1>
             <div className="flex flex-wrap items-center gap-2 mt-2">
               <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-chip bg-white/15 text-white text-xs font-medium">
-                <CheckCircle size={12} /> สมาชิก AgriMarket
+                <CheckCircle size={12} aria-hidden="true" /> สมาชิก AgriMarket
               </span>
               {current.isAdmin && (
-                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-chip bg-accent text-ink text-xs font-semibold">
-                  <ShieldCheck size={12} /> ผู้ดูแลระบบ
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-chip bg-accent text-white text-xs font-semibold">
+                  <ShieldCheck size={12} aria-hidden="true" /> ผู้ดูแลระบบ
                 </span>
               )}
               <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-chip bg-white/15 text-white text-xs font-medium">
-                <Star size={12} /> {tierLabel}
+                <Star size={12} aria-hidden="true" /> {tierLabel}
               </span>
             </div>
           </div>
@@ -68,11 +63,11 @@ export default async function DashboardPage() {
               <Card key={label} className="p-5">
                 <div className="flex items-center gap-3 mb-2">
                   <span className="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center">
-                    <Icon size={18} className="text-green-600" />
+                    <Icon size={18} className="text-green-700" aria-hidden="true" />
                   </span>
                   <p className="text-sm font-medium text-muted">{label}</p>
                 </div>
-                <p className="text-2xl font-bold text-ink">{value}</p>
+                <p className="text-2xl font-bold text-ink tnum">{value}</p>
                 <p className="text-xs text-muted mt-1">ยังไม่มีข้อมูล — เริ่มสร้างได้เร็วๆ นี้</p>
               </Card>
             ))}
@@ -85,12 +80,13 @@ export default async function DashboardPage() {
             <h2 className="text-lg font-bold text-ink">บัญชีของฉัน</h2>
             <Link
               href="/profile"
-              className="text-sm font-semibold text-green-600 hover:text-green-700"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-green-700 hover:text-green-600"
             >
-              ดูโปรไฟล์เต็ม →
+              ดูโปรไฟล์เต็ม
+              <ArrowRight size={14} aria-hidden="true" />
             </Link>
           </div>
-          <Card className="divide-y divide-[var(--color-line)]">
+          <Card className="divide-y divide-line">
             <Row label="รหัสผู้ใช้" value={current.id} mono />
             <Row label="เบอร์โทร" value={current.phone} />
             <Row label="ระดับสมาชิก" value={tierLabel} />
@@ -104,9 +100,9 @@ export default async function DashboardPage() {
           <form action={signOutAction}>
             <button
               type="submit"
-              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-error border border-error/30 rounded-xl hover:bg-[#ffeeee] transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-error border border-error/30 rounded-xl hover:bg-surface transition-colors active:scale-[0.98]"
             >
-              <LogOut size={16} /> ออกจากระบบ
+              <LogOut size={16} aria-hidden="true" /> ออกจากระบบ
             </button>
           </form>
         </section>

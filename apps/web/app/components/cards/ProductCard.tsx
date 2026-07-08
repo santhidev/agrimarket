@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Heart } from "lucide-react";
+import { Heart, Leaf } from "lucide-react";
 import { Card } from "@/app/components/ui/Card";
 
 export type Product = {
@@ -27,8 +27,8 @@ export function ProductCard({ product }: { product: Product }) {
             className="w-full aspect-square object-cover"
           />
         ) : (
-          <div className="w-full aspect-square flex items-center justify-center text-5xl" aria-hidden="true">
-            🌱
+          <div className="w-full aspect-square flex items-center justify-center">
+            <Leaf size={40} className="text-green-200" aria-hidden="true" />
           </div>
         )}
         <span className="absolute top-2 left-2 bg-green-50/90 text-green-600 text-xs px-2 py-0.5 rounded-chip font-medium border border-green-100">
@@ -66,7 +66,10 @@ export function ProductCard({ product }: { product: Product }) {
         </div>
         <div className="flex items-center justify-between mt-2">
           <p className="text-xs text-muted">{product.unit}</p>
-          <p className="text-xs text-muted">❤️ {product.followers}</p>
+          <p className="flex items-center gap-1 text-xs text-muted tnum">
+            <Heart size={12} className="text-muted" aria-hidden="true" />
+            {product.followers}
+          </p>
         </div>
       </div>
     </Card>

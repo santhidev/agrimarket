@@ -15,8 +15,8 @@ const notoThai = Noto_Sans_Thai({
 });
 
 export const metadata: Metadata = {
-  title: "AgriMarket",
-  description: "ตลาดขายตรง ตัดพ่อค้าคนกลาง",
+  title: "AgriMarket — ตลาดเกษตรซื้อขายตรง",
+  description: "ประกาศรับซื้อ เกษตรกรเสนอราคา ซื้อขายกันตรง ไม่ต้องผ่านคนกลาง",
 };
 
 export default function RootLayout({

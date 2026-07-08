@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Calendar, MapPin, Package } from "lucide-react";
+import { ArrowLeft, Calendar, MapPin, Package } from "lucide-react";
 import { createInsForgeServerClient } from "@/app/lib/insforge-server";
 import { getCurrentUser } from "@/app/lib/get-profile";
 import { TopNav } from "@/app/components/layout/TopNav";
@@ -58,9 +58,10 @@ export default async function DemandDetailPage({
         <div>
           <Link
             href="/demands"
-            className="text-sm font-semibold text-green-600 hover:text-green-700"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-green-700 hover:text-green-600"
           >
-            ← กลับสู่รายการรับซื้อ
+            <ArrowLeft size={14} aria-hidden="true" />
+            กลับสู่รายการรับซื้อ
           </Link>
         </div>
 
@@ -77,22 +78,22 @@ export default async function DemandDetailPage({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <DetailRow
-              icon={<Package size={16} className="text-green-600" />}
+              icon={<Package size={16} className="text-green-700" aria-hidden="true" />}
               label="ปริมาณรับซื้อ"
               value={`${demand.quantity} ${demand.unit}`}
             />
             <DetailRow
-              icon={<Package size={16} className="text-green-600" />}
+              icon={<Package size={16} className="text-green-700" aria-hidden="true" />}
               label="คงเหลือ (ยังไม่ได้จับคู่)"
               value={`${demand.pendingQuantity} ${demand.unit}`}
             />
             <DetailRow
-              icon={<Calendar size={16} className="text-green-600" />}
+              icon={<Calendar size={16} className="text-green-700" aria-hidden="true" />}
               label="ปิดรับเมื่อ"
               value={new Date(demand.deadline).toLocaleString("th-TH")}
             />
             <DetailRow
-              icon={<MapPin size={16} className="text-green-600" />}
+              icon={<MapPin size={16} className="text-green-700" aria-hidden="true" />}
               label="พิกัดรับสินค้า"
               value={`${demand.buyerLat.toFixed(4)}, ${demand.buyerLng.toFixed(4)}`}
             />

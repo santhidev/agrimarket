@@ -33,10 +33,7 @@ export default async function ProfilePage() {
       <TopNav isLoggedIn userName={displayName} />
 
       {/* Profile header */}
-      <header
-        className="relative overflow-hidden"
-        style={{ background: "linear-gradient(135deg, #1B5E20 0%, #2E7D32 100%)" }}
-      >
+      <header className="bg-green-700">
         <div className="max-w-6xl mx-auto px-4 md:px-8 py-10 flex items-center gap-5">
           <Avatar name={displayName} size="lg" />
           <div className="min-w-0">
@@ -44,17 +41,17 @@ export default async function ProfilePage() {
             <div className="flex flex-wrap items-center gap-2 mt-2">
               <span
                 className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-chip text-xs font-semibold"
-                style={{ color: kyc.fg, backgroundColor: kyc.bg }}
+                style={{ color: `var(${kyc.fgVar})`, backgroundColor: `var(${kyc.bgVar})` }}
               >
-                <BadgeCheck size={12} /> {kyc.label}
+                <BadgeCheck size={12} aria-hidden="true" /> {kyc.label}
               </span>
               {current.isAdmin && (
-                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-chip bg-accent text-ink text-xs font-semibold">
-                  <ShieldCheck size={12} /> ผู้ดูแลระบบ
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-chip bg-accent text-white text-xs font-semibold">
+                  <ShieldCheck size={12} aria-hidden="true" /> ผู้ดูแลระบบ
                 </span>
               )}
               <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-chip bg-white/15 text-white text-xs font-medium">
-                <Star size={12} /> {tierLabel}
+                <Star size={12} aria-hidden="true" /> {tierLabel}
               </span>
             </div>
           </div>
@@ -65,7 +62,7 @@ export default async function ProfilePage() {
         {/* Personal info */}
         <section>
           <h2 className="text-lg font-bold text-ink mb-4">ข้อมูลส่วนตัว</h2>
-          <Card className="divide-y divide-[var(--color-line)]">
+          <Card className="divide-y divide-line">
             <Row icon={User} label="รหัสผู้ใช้" value={current.id} mono />
             <Row icon={Phone} label="เบอร์โทร" value={current.phone} />
           </Card>
@@ -74,7 +71,7 @@ export default async function ProfilePage() {
         {/* KYC + roles */}
         <section>
           <h2 className="text-lg font-bold text-ink mb-4">การยืนยันตัวตนและบทบาท</h2>
-          <Card className="divide-y divide-[var(--color-line)]">
+          <Card className="divide-y divide-line">
             <Row
               icon={BadgeCheck}
               label="สถานะ KYC"
@@ -94,7 +91,7 @@ export default async function ProfilePage() {
         {/* Credit + scores */}
         <section>
           <h2 className="text-lg font-bold text-ink mb-4">เครดิตและคะแนน</h2>
-          <Card className="divide-y divide-[var(--color-line)]">
+          <Card className="divide-y divide-line">
             <Row icon={Star} label="ระดับสมาชิก" value={tierLabel} />
             <Row icon={CreditCard} label="คะแนนผู้ซื้อ" value={String(current.buyerScore)} />
             <Row icon={CreditCard} label="คะแนนผู้ขาย" value={String(current.sellerScore)} />
@@ -109,9 +106,9 @@ export default async function ProfilePage() {
           <form action={signOutAction}>
             <button
               type="submit"
-              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-error border border-error/30 rounded-xl hover:bg-[#ffeeee] transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-error border border-error/30 rounded-xl hover:bg-surface transition-colors active:scale-[0.98]"
             >
-              <LogOut size={16} /> ออกจากระบบ
+              <LogOut size={16} aria-hidden="true" /> ออกจากระบบ
             </button>
           </form>
         </section>
@@ -129,12 +126,13 @@ const TIER_LABELS: Record<string, string> = {
   Gold: "ระดับทอง",
 };
 
-// KYC display config — fg/bg pairs that read well on a colored header pill.
-const KYC_VIEW: Record<string, { label: string; fg: string; bg: string }> = {
-  None: { label: "ยังไม่ยืนยันตัวตน", fg: "#1f2a1d", bg: "rgba(255,255,255,0.85)" },
-  Pending: { label: "รอตรวจสอบ", fg: "#f57f17", bg: "#fff8e1" },
-  Approved: { label: "ยืนยันตัวตนแล้ว", fg: "#ffffff", bg: "rgba(46,125,50,0.9)" },
-  Rejected: { label: "ยืนยันไม่ผ่าน", fg: "#c62828", bg: "#ffeeee" },
+// KYC display config — fg/bg CSS-var pairs defined in globals.css so the
+// palette lives in one place and stays in sync with the status tokens.
+const KYC_VIEW: Record<string, { label: string; fgVar: string; bgVar: string }> = {
+  None: { label: "ยังไม่ยืนยันตัวตน", fgVar: "--kyc-none-fg", bgVar: "--kyc-none-bg" },
+  Pending: { label: "รอตรวจสอบ", fgVar: "--kyc-pending-fg", bgVar: "--kyc-pending-bg" },
+  Approved: { label: "ยืนยันตัวตนแล้ว", fgVar: "--kyc-approved-fg", bgVar: "--kyc-approved-bg" },
+  Rejected: { label: "ยืนยันไม่ผ่าน", fgVar: "--kyc-rejected-fg", bgVar: "--kyc-rejected-bg" },
 };
 
 function Row({
@@ -153,7 +151,7 @@ function Row({
   return (
     <div className="flex items-start gap-3 px-5 py-4">
       <span className="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center shrink-0">
-        <Icon size={16} className="text-green-600" />
+        <Icon size={16} className="text-green-700" aria-hidden="true" />
       </span>
       <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between gap-4">

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Megaphone, Plus } from "lucide-react";
+import { ArrowLeft, Megaphone, Plus } from "lucide-react";
 import { createInsForgeServerClient } from "@/app/lib/insforge-server";
 import { getCurrentUser } from "@/app/lib/get-profile";
 import { TopNav } from "@/app/components/layout/TopNav";
@@ -70,7 +70,7 @@ export default async function DemandsPage() {
         <div className="max-w-6xl mx-auto px-4 md:px-8 py-8 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <span className="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center">
-              <Megaphone size={20} className="text-green-600" />
+              <Megaphone size={20} className="text-green-700" aria-hidden="true" />
             </span>
             <div>
               <h1 className="text-2xl font-bold text-ink">ประกาศรับซื้อ</h1>
@@ -79,9 +79,9 @@ export default async function DemandsPage() {
           </div>
           <Link
             href={current ? "/demands/new" : "/login"}
-            className="inline-flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-green-700 transition-colors"
+            className="inline-flex items-center gap-2 bg-green-700 text-white px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-green-600 transition-colors active:scale-[0.98]"
           >
-            <Plus size={16} /> ประกาศรับซื้อ
+            <Plus size={16} aria-hidden="true" /> ประกาศรับซื้อ
           </Link>
         </div>
       </header>
@@ -102,9 +102,10 @@ export default async function DemandsPage() {
         <div className="mt-10 text-center">
           <Link
             href="/"
-            className="text-sm font-semibold text-green-600 hover:text-green-700"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-green-700 hover:text-green-600"
           >
-            ← กลับหน้าแรก
+            <ArrowLeft size={14} aria-hidden="true" />
+            กลับหน้าแรก
           </Link>
         </div>
       </main>

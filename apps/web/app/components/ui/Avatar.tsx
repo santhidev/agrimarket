@@ -23,7 +23,7 @@ export function Avatar({
 
   return (
     <div
-      className={`${SIZES[size]} rounded-full bg-green-600 text-white flex items-center justify-center font-semibold shrink-0`}
+      className={`${SIZES[size]} rounded-full bg-green-700 text-white flex items-center justify-center font-semibold shrink-0`}
     >
       {initials}
     </div>

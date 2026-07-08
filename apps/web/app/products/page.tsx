@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Package } from "lucide-react";
+import { ArrowLeft, Package } from "lucide-react";
 import { createInsForgeServerClient } from "@/app/lib/insforge-server";
 import { TopNav } from "@/app/components/layout/TopNav";
 import { Footer } from "@/app/components/layout/Footer";
@@ -72,7 +72,7 @@ export default async function ProductsPage() {
       <header className="bg-white border-b border-line">
         <div className="max-w-6xl mx-auto px-4 md:px-8 py-8 flex items-center gap-3">
           <span className="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center">
-            <Package size={20} className="text-green-600" />
+            <Package size={20} className="text-green-700" aria-hidden="true" />
           </span>
           <div>
             <h1 className="text-2xl font-bold text-ink">คลังสินค้าเกษตร</h1>
@@ -95,9 +95,10 @@ export default async function ProductsPage() {
         <div className="mt-10 text-center">
           <Link
             href="/"
-            className="text-sm font-semibold text-green-600 hover:text-green-700"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-green-700 hover:text-green-600"
           >
-            ← กลับหน้าแรก
+            <ArrowLeft size={14} aria-hidden="true" />
+            กลับหน้าแรก
           </Link>
         </div>
       </main>

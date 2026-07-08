@@ -5,24 +5,24 @@ type Variant = "primary" | "secondary" | "outline" | "ghost" | "danger";
 type Size = "sm" | "md" | "lg";
 
 const BASE =
-  "inline-flex items-center justify-center gap-2 font-semibold rounded-xl transition-colors cursor-pointer select-none " +
+  "inline-flex items-center justify-center gap-2 font-semibold rounded-xl " +
+  "transition-[background-color,border-color,color,transform] duration-150 ease-out " +
+  "cursor-pointer select-none active:scale-[0.98] " +
   "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 " +
-  "disabled:opacity-50 disabled:cursor-not-allowed";
+  "disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100";
 
 const SIZES: Record<Size, string> = {
-  sm: "px-3 py-1.5 text-xs",
-  md: "px-4 py-2 text-sm",
-  lg: "px-6 py-3 text-base",
+  sm: "px-3 py-1.5 text-xs min-h-8",
+  md: "px-4 py-2.5 text-sm min-h-10",
+  lg: "px-6 py-3 text-base min-h-12",
 };
 
 const VARIANTS: Record<Variant, string> = {
-  // Accent orange used on the hero "ประกาศรับซื้อ" CTA is composed at the
-  // call site via className; primary stays the brand green.
   primary: "bg-green-600 text-white hover:bg-green-700 shadow-sm",
-  secondary: "bg-surface text-ink hover:bg-green-50",
-  outline: "border border-green-600 text-green-600 hover:bg-green-50",
-  ghost: "text-muted hover:bg-surface",
-  danger: "bg-error text-white hover:opacity-90",
+  secondary: "bg-surface text-ink border border-line hover:border-green-200 hover:bg-green-50",
+  outline: "border border-green-600 text-green-700 hover:bg-green-50",
+  ghost: "text-ink hover:bg-surface",
+  danger: "bg-error text-white hover:opacity-90 shadow-sm",
 };
 
 type CommonProps = {
