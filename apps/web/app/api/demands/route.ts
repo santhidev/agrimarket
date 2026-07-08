@@ -1,10 +1,14 @@
 import { NextResponse } from "next/server";
 import { createInsForgeServerClient } from "@/app/lib/insforge-server";
 import { getCurrentUser } from "@/app/lib/get-profile";
+import { createInsForgeAdminClient } from "@/app/lib/insforge-admin";
+import { seedNotifications } from "@/app/lib/notifications";
 import {
   createDemandSchema,
   demandQuerySchema,
   initialPendingQuantity,
+  NotificationType,
+  demandCreatedRecipients,
 } from "@agrimarket/shared";
 import {
   DEMAND_SELECT,
@@ -112,6 +116,46 @@ export async function POST(request: Request) {
       { error: "Failed to create demand" },
       { status: 500 }
     );
+  }
+
+  // Issue 17: fan-out — notify everyone following this product. buyer_id +
+  // product name are already on `row` (DEMAND_SELECT joins the product). The
+  // follow query + seed are best-effort: a failure is logged, not thrown.
+  try {
+    const { data: followRows } = await client.database
+      .from("follows")
+      .select("user_id, product_id")
+      .eq("product_id", row.product_id);
+
+    const follows = ((followRows ?? []) as unknown as {
+      user_id: string;
+      product_id: string;
+    }[]).map((f) => ({
+      userId: f.user_id,
+      productId: f.product_id,
+    }));
+
+    const recipients = demandCreatedRecipients(
+      { productId: row.product_id, buyerId: row.buyer_id },
+      follows
+    );
+
+    if (recipients.length > 0) {
+      await seedNotifications(
+        createInsForgeAdminClient(),
+        recipients.map((userId) => ({
+          userId,
+          type: NotificationType.DemandCreated,
+          payload: {
+            productName: row.product.name,
+            quantity: row.quantity,
+            unit: row.product.unit,
+          },
+        }))
+      );
+    }
+  } catch (e) {
+    console.error("[demands/POST] notification fan-out failed", e);
   }
 
   return NextResponse.json({ demand: mapDemand(row) }, { status: 201 });

@@ -1,7 +1,13 @@
 import { NextResponse } from "next/server";
 import { createInsForgeServerClient } from "@/app/lib/insforge-server";
 import { getCurrentUser } from "@/app/lib/get-profile";
-import { canEditDemand, counterOfferSchema } from "@agrimarket/shared";
+import { createInsForgeAdminClient } from "@/app/lib/insforge-admin";
+import { seedNotifications } from "@/app/lib/notifications";
+import {
+  canEditDemand,
+  counterOfferSchema,
+  NotificationType,
+} from "@agrimarket/shared";
 import {
   DEMAND_SELECT,
   mapDemand,
@@ -98,5 +104,41 @@ export async function POST(
   }
 
   const next = (updated as unknown as DemandRow | null) ?? null;
+
+  // Issue 17: notify every seller with an offer on this demand that the buyer
+  // sent a counter-offer. The counter-offer UPDATE already succeeded; a
+  // notification failure is logged, not thrown.
+  try {
+    const { data: offerRows } = await client.database
+      .from("offers")
+      .select("seller_id")
+      .eq("demand_id", id);
+
+    const sellerIds = Array.from(
+      new Set(
+        ((offerRows ?? []) as unknown as { seller_id: string }[]).map(
+          (o) => o.seller_id
+        )
+      )
+    );
+
+    if (sellerIds.length > 0 && row.product?.name) {
+      await seedNotifications(
+        createInsForgeAdminClient(),
+        sellerIds.map((sellerId) => ({
+          userId: sellerId,
+          type: NotificationType.CounterOfferReceived,
+          payload: {
+            productName: row.product.name,
+            price: parsed.data.pricePerUnit,
+            unit: row.product.unit,
+          },
+        }))
+      );
+    }
+  } catch (e) {
+    console.error("[demands/counter-offer] notification seed failed", e);
+  }
+
   return NextResponse.json({ demand: next ? mapDemand(next) : null });
 }

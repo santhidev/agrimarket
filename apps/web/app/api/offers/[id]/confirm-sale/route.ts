@@ -1,7 +1,13 @@
 import { NextResponse } from "next/server";
 import { createInsForgeServerClient } from "@/app/lib/insforge-server";
 import { getCurrentUser } from "@/app/lib/get-profile";
-import { canSellerConfirm, OfferStatus } from "@agrimarket/shared";
+import { createInsForgeAdminClient } from "@/app/lib/insforge-admin";
+import { seedNotifications } from "@/app/lib/notifications";
+import {
+  canSellerConfirm,
+  OfferStatus,
+  NotificationType,
+} from "@agrimarket/shared";
 import {
   OFFER_SELECT,
   mapOffer,
@@ -80,5 +86,28 @@ export async function POST(
   }
 
   const next = (updated as unknown as OfferRow | null) ?? null;
+
+  // Issue 17: notify the demand's buyer that the seller confirmed. The status
+  // flip already succeeded; notification failure is logged, not thrown.
+  try {
+    const { data: d } = await client.database
+      .from("demands")
+      .select("buyer_id, product:products(name)")
+      .eq("id", row.demand_id)
+      .single();
+    const demand = (d as unknown as { buyer_id: string; product: { name: string } } | null) ?? null;
+    if (demand?.buyer_id && demand.product?.name) {
+      await seedNotifications(createInsForgeAdminClient(), [
+        {
+          userId: demand.buyer_id,
+          type: NotificationType.OfferSellerConfirmed,
+          payload: { productName: demand.product.name },
+        },
+      ]);
+    }
+  } catch (e) {
+    console.error("[offers/confirm-sale] notification seed failed", e);
+  }
+
   return NextResponse.json({ offer: next ? mapOffer(next) : null });
 }

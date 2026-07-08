@@ -1,10 +1,13 @@
 import { NextResponse } from "next/server";
 import { createInsForgeServerClient } from "@/app/lib/insforge-server";
 import { getCurrentUser } from "@/app/lib/get-profile";
+import { createInsForgeAdminClient } from "@/app/lib/insforge-admin";
+import { seedNotifications } from "@/app/lib/notifications";
 import {
   createOfferSchema,
   acceptsOffers,
   KycStatus,
+  NotificationType,
 } from "@agrimarket/shared";
 import {
   OFFER_SELECT,
@@ -101,11 +104,16 @@ export async function POST(request: Request) {
   // reads as null under RLS → 404, so existence isn't leaked.
   const { data: demand, error: demandErr } = await client.database
     .from("demands")
-    .select("id, status")
+    .select("id, status, buyer_id, product:products(name)")
     .eq("id", demandId)
     .single();
 
-  const demandRow = (demand as unknown as { id: string; status: string } | null) ?? null;
+  const demandRow = (demand as unknown as {
+    id: string;
+    status: string;
+    buyer_id: string;
+    product: { name: string };
+  } | null) ?? null;
   if (!demandRow) {
     return NextResponse.json(
       { error: "Demand not found" },
@@ -176,6 +184,25 @@ export async function POST(request: Request) {
       { error: "Failed to create offer" },
       { status: 500 }
     );
+  }
+
+  // Issue 17: notify the demand's buyer that a new offer arrived. The state
+  // change (offer INSERT) already succeeded; a notification failure is logged,
+  // not thrown (seedNotifications handles that). Skipped if buyer_id or product
+  // name couldn't be loaded. Runs before the photo branch so it precedes both
+  // return paths (the refreshed-return inside the if, the fallback below).
+  try {
+    if (demandRow.buyer_id && demandRow.product?.name) {
+      await seedNotifications(createInsForgeAdminClient(), [
+        {
+          userId: demandRow.buyer_id,
+          type: NotificationType.OfferCreated,
+          payload: { productName: demandRow.product.name },
+        },
+      ]);
+    }
+  } catch (e) {
+    console.error("[offers/POST] notification seed failed", e);
   }
 
   // Bulk-insert photos if any. The route links them to the offer id; the
