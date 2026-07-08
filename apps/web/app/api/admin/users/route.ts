@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 import { createInsForgeServerClient } from "@/app/lib/insforge-server";
 import { requireAdmin } from "@/app/lib/require-admin";
+import { userFilterSchema } from "@agrimarket/shared";
 
-// GET /api/admin/users — list profiles (admin only).
-//
-// Query params: ?page=1&pageSize=50 — simple offset pagination. Enough for
-// the MVP admin dashboard (#18); a search/filter layer arrives there.
+// GET /api/admin/users — list profiles (admin only) with search + filter
+// (Issue 18). Query: ?search=&kycStatus=&tier=&page=&pageSize=. search is a
+// phone substring (ilike); kycStatus / tier are enum filters. Response carries
+// `total` so the page can render a pager.
 export async function GET(request: Request) {
   const gate = await requireAdmin();
   if (!gate.ok) {
@@ -16,22 +17,41 @@ export async function GET(request: Request) {
   }
 
   const url = new URL(request.url);
-  const page = Math.max(1, Number(url.searchParams.get("page") ?? "1") || 1);
-  const pageSize = Math.min(
-    200,
-    Math.max(1, Number(url.searchParams.get("pageSize") ?? "50") || 50)
+  const parsed = userFilterSchema.safeParse(
+    Object.fromEntries(url.searchParams.entries())
   );
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: "Invalid user filter", issues: parsed.error.issues },
+      { status: 400 }
+    );
+  }
+  const { search, kycStatus, tier, page, pageSize } = parsed.data;
+
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
 
   const client = await createInsForgeServerClient();
-  const { data, error } = await client.database
+  let query = client.database
     .from("profiles")
     .select(
-      "id, phone, tier, kyc_status, buyer_score, seller_score, is_admin, is_rider, is_hub_staff, hub_id, created_at"
+      "id, phone, tier, kyc_status, buyer_score, seller_score, is_admin, is_rider, is_hub_staff, hub_id, created_at",
+      { count: "exact" }
     )
     .order("created_at", { ascending: false })
     .range(from, to);
+
+  if (search) {
+    query = query.ilike("phone", `%${search}%`);
+  }
+  if (kycStatus) {
+    query = query.eq("kyc_status", kycStatus);
+  }
+  if (tier) {
+    query = query.eq("tier", tier);
+  }
+
+  const { data, count, error } = await query;
 
   if (error) {
     return NextResponse.json({ error: "Failed to list users" }, { status: 500 });
@@ -54,6 +74,7 @@ export async function GET(request: Request) {
   return NextResponse.json({
     page,
     pageSize,
+    total: count ?? 0,
     users: rows.map((r) => ({
       id: r.id,
       phone: r.phone,
