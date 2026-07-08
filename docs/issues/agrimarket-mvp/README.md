@@ -20,7 +20,7 @@
 | 14 | Select offers + Seller confirmation | done | 13 |
 | 15 | Auto-decline (24h) + Match + Contact | done | 14 |
 | 16 | Follow + Unfollow | done | 03 |
-| 17 | Notifications: Realtime + Push (foundation) | ready-for-agent | 16 |
+| 17 | Notifications: Realtime + Push (foundation) | done | 16 |
 | 18 | Admin: Dashboard metrics + User management | done | 03 |
 | 19 | E2E: Happy path | ready-for-agent | 15 |
 
