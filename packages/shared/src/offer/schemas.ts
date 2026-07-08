@@ -117,5 +117,27 @@ export type CreateOfferInput = z.infer<typeof createOfferSchema>;
 export type UpdateOfferInput = z.infer<typeof updateOfferSchema>;
 export type Offer = z.infer<typeof offerSchema>;
 
+// --- Buyer select (Issue 14) ------------------------------------------------
+
+/// Request body for POST /api/demands/:id/select. The buyer picks a set of
+/// offers + the accepted_quantity for each (≤ the offer's offered quantity).
+/// The array must be non-empty (at least one offer selected); the route
+/// validates the sum + per-offer caps via isValidSelectionQuantities after
+/// loading the offer rows (the schema can't cross-check against offer rows).
+export const selectOffersSchema = z
+  .object({
+    offers: z
+      .array(
+        z.object({
+          offerId: uuid,
+          acceptedQuantity: z.number().int().positive("ต้องมากกว่า 0"),
+        })
+      )
+      .min(1, "ต้องเลือกอย่างน้อยหนึ่งข้อเสนอ"),
+  })
+  .strict();
+
+export type SelectOffersInput = z.infer<typeof selectOffersSchema>;
+
 // Re-export the status enum so callers have one import surface.
 export { OfferStatus };

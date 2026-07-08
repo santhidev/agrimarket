@@ -17,7 +17,7 @@
 | 11 | Offer: Competitive bidding view | done | 10 |
 | 12 | Counter-offer | done | 10 |
 | 13 | Best Offer: Bounded Knapsack | done | 10 |
-| 14 | Select offers + Seller confirmation | ready-for-agent | 13 |
+| 14 | Select offers + Seller confirmation | done | 13 |
 | 15 | Auto-decline (24h) + Match + Contact | ready-for-agent | 14 |
 | 16 | Follow + Unfollow | ready-for-agent | 03 |
 | 17 | Notifications: Realtime + Push (foundation) | ready-for-agent | 16 |

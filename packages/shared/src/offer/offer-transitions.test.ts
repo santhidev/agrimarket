@@ -5,6 +5,10 @@ import {
   shouldCancelOfferOnDemandCancel,
   canEditOffer,
   canWithdrawOffer,
+  canBeSelected,
+  canSellerConfirm,
+  canSellerDecline,
+  shouldResetOnReselect,
 } from "./offer-transitions";
 
 // Pure offer lifecycle helpers (Issue 08).
@@ -119,5 +123,89 @@ describe("canWithdrawOffer", () => {
     expect(canWithdrawOffer(OfferStatus.Expired)).toBe(false);
     expect(canWithdrawOffer(OfferStatus.Cancelled)).toBe(false);
     expect(canWithdrawOffer(OfferStatus.Declined)).toBe(false);
+  });
+});
+
+// canBeSelected (Issue 14): the buyer may select an offer into a combination
+// only while it is ACTIVE — competing freely, terms not locked. Once the buyer
+// has selected (PENDING_SELLER_CONFIRMATION) or the seller has confirmed
+// (CONFIRMED), the offer must be reset to ACTIVE before re-selecting; terminal
+// statuses are out of the running entirely. The route resets via the re-select
+// flow, then selects — so this predicate answers "selectable in principle".
+describe("canBeSelected", () => {
+  it("allows selecting an ACTIVE offer", () => {
+    expect(canBeSelected(OfferStatus.Active)).toBe(true);
+  });
+
+  it("blocks selecting an offer already mid-handshake", () => {
+    expect(canBeSelected(OfferStatus.PendingSellerConfirmation)).toBe(false);
+    expect(canBeSelected(OfferStatus.Confirmed)).toBe(false);
+  });
+
+  it("blocks selecting terminal offers", () => {
+    expect(canBeSelected(OfferStatus.Matched)).toBe(false);
+    expect(canBeSelected(OfferStatus.Withdrawn)).toBe(false);
+    expect(canBeSelected(OfferStatus.Rejected)).toBe(false);
+    expect(canBeSelected(OfferStatus.Expired)).toBe(false);
+    expect(canBeSelected(OfferStatus.Cancelled)).toBe(false);
+    expect(canBeSelected(OfferStatus.Declined)).toBe(false);
+  });
+});
+
+// canSellerConfirm / canSellerDecline (Issue 14): the seller may confirm or
+// decline a sale only for an offer the buyer has just selected
+// (PENDING_SELLER_CONFIRMATION). ACTIVE has no selection to respond to;
+// CONFIRMED already answered yes; terminal statuses are closed.
+describe("canSellerConfirm", () => {
+  it("allows confirming a PENDING_SELLER_CONFIRMATION offer", () => {
+    expect(canSellerConfirm(OfferStatus.PendingSellerConfirmation)).toBe(true);
+  });
+
+  it("blocks confirming any other status", () => {
+    expect(canSellerConfirm(OfferStatus.Active)).toBe(false);
+    expect(canSellerConfirm(OfferStatus.Confirmed)).toBe(false);
+    expect(canSellerConfirm(OfferStatus.Matched)).toBe(false);
+    expect(canSellerConfirm(OfferStatus.Declined)).toBe(false);
+  });
+});
+
+describe("canSellerDecline", () => {
+  it("allows declining a PENDING_SELLER_CONFIRMATION offer", () => {
+    expect(canSellerDecline(OfferStatus.PendingSellerConfirmation)).toBe(true);
+  });
+
+  it("blocks declining any other status", () => {
+    expect(canSellerDecline(OfferStatus.Active)).toBe(false);
+    expect(canSellerDecline(OfferStatus.Confirmed)).toBe(false);
+    expect(canSellerDecline(OfferStatus.Declined)).toBe(false);
+  });
+});
+
+// shouldResetOnReselect (Issue 14): when the buyer re-selects (e.g. after a
+// seller declined), every PENDING_SELLER_CONFIRMATION and CONFIRMED offer on
+// the demand reverts to ACTIVE so the new selection starts clean — the buyer
+// picks a fresh set and every chosen offer must be re-confirmed (CONTEXT.md
+// "วนกลับเลือกใหม่ → CONFIRMED offers ต้องเลือกใหม่ + ยืนยันใหม่"). ACTIVE offers
+// and terminal statuses are left as-is.
+describe("shouldResetOnReselect", () => {
+  it("resets PENDING_SELLER_CONFIRMATION offers (mid-handshake)", () => {
+    expect(shouldResetOnReselect(OfferStatus.PendingSellerConfirmation)).toBe(true);
+  });
+
+  it("resets CONFIRMED offers (seller said yes — must re-confirm)", () => {
+    expect(shouldResetOnReselect(OfferStatus.Confirmed)).toBe(true);
+  });
+
+  it("leaves ACTIVE offers (still freely competing)", () => {
+    expect(shouldResetOnReselect(OfferStatus.Active)).toBe(false);
+  });
+
+  it("leaves terminal offers untouched (they already ended)", () => {
+    expect(shouldResetOnReselect(OfferStatus.Matched)).toBe(false);
+    expect(shouldResetOnReselect(OfferStatus.Withdrawn)).toBe(false);
+    expect(shouldResetOnReselect(OfferStatus.Rejected)).toBe(false);
+    expect(shouldResetOnReselect(OfferStatus.Expired)).toBe(false);
+    expect(shouldResetOnReselect(OfferStatus.Cancelled)).toBe(false);
+    expect(shouldResetOnReselect(OfferStatus.Declined)).toBe(false);
   });
 });

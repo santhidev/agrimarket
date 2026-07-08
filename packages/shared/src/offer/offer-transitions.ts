@@ -65,3 +65,49 @@ export function canWithdrawOffer(status: OfferStatus): boolean {
     status === OfferStatus.Confirmed
   );
 }
+
+// --- Buyer select / seller confirm-decline gates (Issue 14) -----------------
+//
+// The select → confirm handshake: the buyer picks a combination of offers
+// (POST /api/demands/:id/select), pushing them to PENDING_SELLER_CONFIRMATION
+// and setting accepted_quantity; each chosen seller then confirms
+// (POST /api/offers/:id/confirm-sale → CONFIRMED) or declines (decline-sale →
+// DECLINED). If the buyer re-selects after a decline, every PENDING and
+// CONFIRMED offer on the demand reverts to ACTIVE so the new selection starts
+// clean — the buyer picks a fresh set and every chosen offer must be
+// re-confirmed (CONTEXT.md "วนกลับเลือกให้ → CONFIRMED offers ต้องเลือกใหม่ +
+// ยืนยันใหม่"). REJECTED is reserved for #15 (match lock: non-matched offers
+// flip to REJECTED); #14 never sets REJECTED.
+
+/// True only for ACTIVE — the buyer may select an offer that's still freely
+/// competing. PENDING/CONFIRMED must reset to ACTIVE first (the route does
+/// this on re-select); terminal statuses are out of the running. The route
+/// allows selecting an offer that's currently PENDING/CONFIRMED because it
+/// resets before applying the new selection — this predicate answers
+/// "selectable in principle", the reset is the route's concern.
+export function canBeSelected(status: OfferStatus): boolean {
+  return status === OfferStatus.Active;
+}
+
+/// True only for PENDING_SELLER_CONFIRMATION — the seller may confirm a sale
+/// only for an offer the buyer just selected. ACTIVE has no selection to
+/// respond to; CONFIRMED already said yes; terminal/DECLINED are closed.
+export function canSellerConfirm(status: OfferStatus): boolean {
+  return status === OfferStatus.PendingSellerConfirmation;
+}
+
+/// True only for PENDING_SELLER_CONFIRMATION — the seller may decline a sale
+/// only for an offer the buyer just selected. Symmetric with canSellerConfirm.
+export function canSellerDecline(status: OfferStatus): boolean {
+  return status === OfferStatus.PendingSellerConfirmation;
+}
+
+/// True for PENDING_SELLER_CONFIRMATION and CONFIRMED — these are the offers
+/// that must revert to ACTIVE when the buyer re-selects. ACTIVE stays ACTIVE;
+/// terminal statuses are left as-is. Used by the select route's reset step.
+export function shouldResetOnReselect(status: OfferStatus): boolean {
+  return (
+    status === OfferStatus.PendingSellerConfirmation ||
+    status === OfferStatus.Confirmed
+  );
+}
