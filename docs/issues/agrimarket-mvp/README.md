@@ -19,7 +19,7 @@
 | 13 | Best Offer: Bounded Knapsack | done | 10 |
 | 14 | Select offers + Seller confirmation | done | 13 |
 | 15 | Auto-decline (24h) + Match + Contact | done | 14 |
-| 16 | Follow + Unfollow | ready-for-agent | 03 |
+| 16 | Follow + Unfollow | done | 03 |
 | 17 | Notifications: Realtime + Push (foundation) | ready-for-agent | 16 |
 | 18 | Admin: Dashboard metrics + User management | ready-for-agent | 03 |
 | 19 | E2E: Happy path | ready-for-agent | 15 |
