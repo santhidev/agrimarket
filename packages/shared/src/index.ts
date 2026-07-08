@@ -45,6 +45,11 @@ export * from "./offer/schemas";
 export * from "./offer/select";
 export * from "./offer/offer-jobs";
 
+// Admin: dashboard metric calculations (fulfillment rate, transaction success,
+// repeat rate) + filter/validation schemas (Issue 18).
+export * from "./admin/metrics";
+export * from "./admin/schemas";
+
 // Follow: read-shape schemas for the follow/unfollow/list endpoints (Issue 16).
 // The follow/unfollow endpoints take the product id from the URL path, so there
 // is no request-body schema — only read shapes for API/client type consistency.
