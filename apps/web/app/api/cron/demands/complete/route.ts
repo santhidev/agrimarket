@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { createInsForgeAdminClient } from "@/app/lib/insforge-admin";
-import { shouldCompleteDemand } from "@agrimarket/shared";
+import { shouldCompleteDemand, NotificationType } from "@agrimarket/shared";
 import { DEMAND_SELECT, type DemandRow } from "@/app/api/demands/mapping";
+import { seedNotifications } from "@/app/lib/notifications";
 
 // POST /api/cron/demands/complete (Issue 09).
 //
@@ -69,10 +70,10 @@ export async function POST(request: Request) {
       continue;
     }
 
-    const { error: notifErr } = await admin.database.from("notifications").insert([
+    await seedNotifications(admin, [
       {
-        user_id: row.buyer_id,
-        type: "demand.completed",
+        userId: row.buyer_id,
+        type: NotificationType.DemandCompleted,
         payload: {
           demandId: row.id,
           productId: row.product_id,
@@ -80,13 +81,6 @@ export async function POST(request: Request) {
         },
       },
     ]);
-
-    if (notifErr) {
-      console.error(
-        `[cron/demands/complete] notification ${row.id} failed`,
-        notifErr
-      );
-    }
     completed += 1;
   }
 

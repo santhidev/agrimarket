@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { createInsForgeAdminClient } from "@/app/lib/insforge-admin";
-import { shouldExpireDemand } from "@agrimarket/shared";
+import { shouldExpireDemand, NotificationType } from "@agrimarket/shared";
 import { DEMAND_SELECT, type DemandRow } from "@/app/api/demands/mapping";
+import { seedNotifications } from "@/app/lib/notifications";
 
 // POST /api/cron/demands/expire (Issue 09).
 //
@@ -65,10 +66,10 @@ export async function POST(request: Request) {
       continue;
     }
 
-    const { error: notifErr } = await admin.database.from("notifications").insert([
+    await seedNotifications(admin, [
       {
-        user_id: row.buyer_id,
-        type: "demand.expired",
+        userId: row.buyer_id,
+        type: NotificationType.DemandExpired,
         payload: {
           demandId: row.id,
           productId: row.product_id,
@@ -76,15 +77,6 @@ export async function POST(request: Request) {
         },
       },
     ]);
-
-    if (notifErr) {
-      // The status flip already succeeded; a missing notification is recoverable
-      // (the demand is EXPIRED either way) so this is logged, not fatal.
-      console.error(
-        `[cron/demands/expire] notification ${row.id} failed`,
-        notifErr
-      );
-    }
     expired += 1;
   }
 

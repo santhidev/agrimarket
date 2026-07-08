@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { createInsForgeAdminClient } from "@/app/lib/insforge-admin";
-import { shouldDeclineOffer } from "@agrimarket/shared";
+import { shouldDeclineOffer, NotificationType } from "@agrimarket/shared";
 import { OFFER_SELECT, type OfferRow } from "@/app/api/offers/mapping";
+import { seedNotifications } from "@/app/lib/notifications";
 
 // POST /api/cron/offers/decline (Issue 15).
 //
@@ -89,29 +90,17 @@ export async function POST(request: Request) {
     }
 
     const productName = row.demand?.product.name ?? null;
-    const { error: notifErr } = await admin.database
-      .from("notifications")
-      .insert([
-        {
-          user_id: row.seller_id,
-          type: "offer.auto_declined",
-          payload: {
-            offerId: row.id,
-            demandId: row.demand?.id ?? null,
-            productName,
-          },
+    await seedNotifications(admin, [
+      {
+        userId: row.seller_id,
+        type: NotificationType.OfferAutoDeclined,
+        payload: {
+          offerId: row.id,
+          demandId: row.demand?.id ?? null,
+          productName,
         },
-      ]);
-
-    if (notifErr) {
-      // The status flip already succeeded; a missing notification is recoverable
-      // (the offer is DECLINED either way) so this is logged, not fatal. Mirrors
-      // the demand expire/complete jobs.
-      console.error(
-        `[cron/offers/decline] notification ${row.id} failed`,
-        notifErr
-      );
-    }
+      },
+    ]);
     declined += 1;
   }
 
