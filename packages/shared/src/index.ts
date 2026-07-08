@@ -24,12 +24,15 @@ export * from "./catalog/suggestion-schemas";
 
 // Demand: lifecycle enums, zod schemas, transitions (Issue 07, extended 08),
 // background-job predicates (Issue 09 auto-expire/complete), counter-offer
-// acceptance threshold (Issues 11 + 12).
+// acceptance threshold (Issues 11 + 12), best-offer knapsack solver +
+// haversine distance tiebreaker (Issue 13).
 export * from "./demand/enums";
 export * from "./demand/schemas";
 export * from "./demand/demand-transitions";
 export * from "./demand/demand-jobs";
 export * from "./demand/counter-offer";
+export * from "./demand/haversine-km";
+export * from "./demand/best-offer";
 
 // Offer: lifecycle enums + transitions (Issue 08 vocabulary for the demand-
 // cancel cascade + offer-acceptance gate; the offers table lands in #10) +

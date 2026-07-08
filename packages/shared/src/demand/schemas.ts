@@ -128,5 +128,37 @@ export type CounterOfferInput = z.infer<typeof counterOfferSchema>;
 export type DemandQuery = z.infer<typeof demandQuerySchema>;
 export type Demand = z.infer<typeof demandSchema>;
 
+// --- Best Offer response (Issue 13) -----------------------------------------
+
+/// Response body for POST /api/demands/:id/best-offer. The buyer asks the
+/// solver for ranked offer combinations; this validates the shape the route
+/// returns (the solver in best-offer.ts produces it, but the schema is the
+/// contract the client codes against). Mirrors BestOfferResult — kept here so
+/// all demand response shapes live in one place. The request body (optional
+/// maxCombinations) is validated inline in the route.
+export const bestOfferResponseSchema = z.object({
+  combinations: z
+    .array(
+      z.object({
+        offers: z.array(
+          z.object({
+            offerId: uuid,
+            quantity: z.number().int().positive(),
+            pricePerUnit: z.number().positive(),
+            lineTotal: z.number().nonnegative(),
+          })
+        ),
+        totalQuantity: z.number().int().positive(),
+        totalCost: z.number().nonnegative(),
+        totalDistanceKm: z.number().nonnegative(),
+        isPartial: z.boolean(),
+      })
+    )
+    .max(5),
+  canFulfill: z.boolean(),
+});
+
+export type BestOfferResponse = z.infer<typeof bestOfferResponseSchema>;
+
 // Re-export the status enum so callers have one import surface.
 export { DemandStatus };
