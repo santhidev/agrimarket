@@ -1,9 +1,9 @@
 import { describe, it, expect } from "vitest";
+import { describeNotification } from "./describe";
 import {
-  describeNotification,
+  NotificationType as NotificationTypeEnum,
   type NotificationType,
-} from "./describe";
-import { NotificationType as NotificationTypeEnum } from "./types";
+} from "./types";
 
 describe("describeNotification", () => {
   it("returns title + body for offer.created", () => {
