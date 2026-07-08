@@ -54,3 +54,7 @@ export * from "./admin/schemas";
 // The follow/unfollow endpoints take the product id from the URL path, so there
 // is no request-body schema — only read shapes for API/client type consistency.
 export * from "./follow/schemas";
+
+// Notifications: type vocabulary + describeNotification() (Issue 17).
+// Recipients/schemas are added in Task 3.
+export * from "./notifications";
