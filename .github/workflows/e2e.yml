@@ -1,0 +1,58 @@
+name: E2E
+
+on:
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install deps
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: pnpm --filter @agrimarket/web exec playwright install --with-deps chromium
+
+      - name: Build web
+        run: pnpm --filter @agrimarket/web build
+
+      - name: Start web server
+        run: pnpm --filter @agrimarket/web start &
+        env:
+          NODE_ENV: production
+          PORT: 3000
+          NEXT_PUBLIC_INSFORGE_URL: ${{ secrets.E2E_INSFORGE_URL }}
+          NEXT_PUBLIC_INSFORGE_ANON_KEY: ${{ secrets.E2E_INSFORGE_ANON_KEY }}
+          INSFORGE_API_KEY: ${{ secrets.E2E_INSFORGE_API_KEY }}
+
+      - name: Wait for server
+        run: npx wait-on http://localhost:3000 --timeout 60000
+
+      - name: Run E2E
+        run: pnpm test:e2e
+        env:
+          E2E_BASE_URL: http://localhost:3000
+          E2E_INSFORGE_URL: ${{ secrets.E2E_INSFORGE_URL }}
+          E2E_INSFORGE_ANON_KEY: ${{ secrets.E2E_INSFORGE_ANON_KEY }}
+          E2E_INSFORGE_API_KEY: ${{ secrets.E2E_INSFORGE_API_KEY }}
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: apps/web/playwright-report/
+          retention-days: 7
