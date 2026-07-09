@@ -22,7 +22,7 @@
 | 16 | Follow + Unfollow | done | 03 |
 | 17 | Notifications: Realtime + Push (foundation) | done | 16 |
 | 18 | Admin: Dashboard metrics + User management | done | 03 |
-| 19 | E2E: Happy path | ready-for-agent | 15 |
+| 19 | E2E: Happy path | done | 15 |
 
 ## PRD
 
