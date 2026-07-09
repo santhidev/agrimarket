@@ -121,8 +121,18 @@ export async function POST(request: Request) {
   // Issue 17: fan-out — notify everyone following this product. buyer_id +
   // product name are already on `row` (DEMAND_SELECT joins the product). The
   // follow query + seed are best-effort: a failure is logged, not thrown.
+  //
+  // The follows read MUST use the admin client (not the SSR client), because
+  // the follows_select_own_or_admin RLS policy only returns rows where
+  // user_id = auth.uid() — i.e. the buyer's own follows. The buyer is not the
+  // owner of any seller's follow, so the SSR client would return an empty set
+  // and the fan-out would silently no-op. The admin client bypasses RLS so the
+  // other users' follows are enumerable. This matches the migration's stated
+  // intent ("the fan-out for #17's notifications runs server-side via the
+  // service-role admin client (bypasses RLS)").
   try {
-    const { data: followRows } = await client.database
+    const admin = createInsForgeAdminClient();
+    const { data: followRows } = await admin.database
       .from("follows")
       .select("user_id, product_id")
       .eq("product_id", row.product_id);
@@ -142,7 +152,7 @@ export async function POST(request: Request) {
 
     if (recipients.length > 0) {
       await seedNotifications(
-        createInsForgeAdminClient(),
+        admin,
         recipients.map((userId) => ({
           userId,
           type: NotificationType.DemandCreated,
