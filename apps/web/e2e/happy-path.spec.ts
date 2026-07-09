@@ -155,4 +155,39 @@ test("happy path: demand → offer → select → confirm → match → contacts
     const json = await res.json();
     expect(json.offer.status).toBe("CONFIRMED");
   });
+
+  // --- Step 9: buyer matches (API fallback) ---
+  await test.step("buyer matches", async () => {
+    const res = await request.post(`/api/demands/${demandId}/match`);
+    expect(res.ok()).toBe(true);
+    // Verify demand status → MATCHED.
+    const detail = await request.get(`/api/demands/${demandId}`);
+    const json = await detail.json();
+    expect(json.demand.status).toBe("MATCHED");
+  });
+
+  // --- Step 10: buyer sees the seller's phone (the key happy-path assertion) ---
+  await test.step("buyer sees seller contacts", async () => {
+    const res = await request.get(`/api/demands/${demandId}/contacts`);
+    expect(res.ok()).toBe(true);
+    const json = await res.json();
+    // The contacts endpoint returns the matched sellers' phone numbers. Each
+    // entry is { offerId, sellerId, sellerPhone, acceptedQuantity }.
+    const contacts = json.contacts ?? json.sellers ?? [];
+    expect(contacts.length).toBeGreaterThanOrEqual(1);
+    expect(
+      contacts.some((c: { sellerPhone?: string }) => c.sellerPhone)
+    ).toBe(true);
+  });
+
+  // --- Step 11 (bonus): notifications arrived ---
+  await test.step("buyer sees notifications", async () => {
+    const res = await request.get(`/api/notifications?limit=5`);
+    const json = await res.json();
+    // At least the offer.created + seller_confirmed notifications.
+    expect(json.unreadCount).toBeGreaterThanOrEqual(1);
+  });
+
+  // Cleanup the seller request context.
+  await sellerRequest.dispose();
 });
