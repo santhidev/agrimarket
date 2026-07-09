@@ -1,8 +1,11 @@
+"use client";
+
 import Link from "next/link";
 import { Clock, MapPin } from "lucide-react";
 import { Card } from "@/app/components/ui/Card";
 import { Badge } from "@/app/components/ui/Badge";
 import { Button } from "@/app/components/ui/Button";
+import { useAuth } from "@/app/components/auth/AuthProvider";
 
 export type Demand = {
   id: string;
@@ -18,6 +21,11 @@ export type Demand = {
 };
 
 export function DemandCard({ demand }: { demand: Demand }) {
+  const { user } = useAuth();
+  // "เสนอขาย" requires auth — route to /login when signed out, otherwise to
+  // the demand detail page where the offer form lives.
+  const offerHref = user ? `/demands/${demand.id}` : "/login";
+
   return (
     <Card className="overflow-hidden hover:shadow-md transition-shadow">
       <div className="relative">
@@ -54,7 +62,7 @@ export function DemandCard({ demand }: { demand: Demand }) {
           <Button href="/demands" variant="outline" size="sm">
             ดู
           </Button>
-          <Button href="/login" variant="primary" size="sm">
+          <Button href={offerHref} variant="primary" size="sm">
             เสนอขาย
           </Button>
         </div>

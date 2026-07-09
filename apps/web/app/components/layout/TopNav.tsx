@@ -6,6 +6,7 @@ import { Bell, ChevronDown, Leaf, Plus } from "lucide-react";
 import { signOutAction } from "@/app/login/actions";
 import { Avatar } from "@/app/components/ui/Avatar";
 import { NotificationsBell } from "@/app/components/notifications/NotificationsBell";
+import { useAuth } from "@/app/components/auth/AuthProvider";
 
 const NAV_ITEMS = [
   { label: "หน้าแรก", href: "/" },
@@ -13,22 +14,41 @@ const NAV_ITEMS = [
   { label: "สินค้า", href: "/products" },
 ];
 
-/**
- * Sticky global top navigation. Auth-aware: shows the avatar + menu when a
- * signed-in user is supplied, otherwise shows a "เข้าสู่ระบบ" link.
- *
- * Search/filter are intentionally omitted until they're wired to a real
- * query — a non-functional search box reads as a mockup.
- */
+// Props are an optional SSR override: Server Component pages that already
+// resolved the session pass it so the first paint is correct (no flicker).
+// Without props the client-side AuthProvider (/api/auth/me) drives the state —
+// which is what every page that didn't resolve the user relied on before, and
+// the reason a logged-in user saw "เข้าสู่ระบบ" and got bounced to /login.
 export function TopNav({
-  isLoggedIn = false,
+  isLoggedIn,
   userName = "",
   userId,
 }: {
   isLoggedIn?: boolean;
   userName?: string;
   userId?: string;
-}) {
+} = {}) {
+  const { user, loading, clearUser } = useAuth();
+
+  // signOut runs as a server action; once it returns the session cookie is
+  // gone, so clear the cached client state too — otherwise DemandCard/TopNav
+  // keep showing "logged in" until a full page reload.
+  const onSignOut = async () => {
+    await signOutAction();
+    clearUser();
+  };
+
+  // Prefer the SSR prop when present (server-resolved, no network wait);
+  // otherwise fall back to the client AuthProvider. While loading and no SSR
+  // hint is available, treat as logged-out but render neutral links to avoid a
+  // post-hydration bounce to /login.
+  const resolved =
+    isLoggedIn !== undefined
+      ? { loggedIn: isLoggedIn, userId, userName }
+      : loading
+        ? { loggedIn: false, userId: undefined, userName: "" }
+        : { loggedIn: !!user, userId: user?.id, userName: user?.phone ?? "" };
+
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -56,11 +76,11 @@ export function TopNav({
 
       {/* Right cluster */}
       <div className="flex items-center gap-1 md:gap-2 ml-auto shrink-0">
-        {isLoggedIn && userId ? (
-          <NotificationsBell userId={userId} />
+        {resolved.loggedIn && resolved.userId ? (
+          <NotificationsBell userId={resolved.userId} />
         ) : (
           <Link
-            href={isLoggedIn ? "/dashboard" : "/login"}
+            href="/login"
             className="relative p-2 rounded-lg hover:bg-surface text-ink"
             aria-label="แจ้งเตือน"
           >
@@ -69,14 +89,14 @@ export function TopNav({
         )}
 
         <Link
-          href={isLoggedIn ? "/demands/new" : "/login"}
+          href={resolved.loggedIn ? "/demands/new" : "/login"}
           className="hidden sm:inline-flex items-center gap-1.5 bg-green-700 text-white px-3 py-2 rounded-lg text-sm font-semibold hover:bg-green-600 transition-colors active:scale-[0.98]"
         >
           <Plus size={16} aria-hidden="true" />
           <span>ประกาศรับซื้อ</span>
         </Link>
 
-        {isLoggedIn ? (
+        {resolved.loggedIn ? (
           <div className="relative">
             <button
               type="button"
@@ -85,7 +105,7 @@ export function TopNav({
               aria-expanded={menuOpen}
               aria-label="เมนูบัญชี"
             >
-              <Avatar name={userName} size="sm" />
+              <Avatar name={resolved.userName} size="sm" />
               <ChevronDown size={14} className="text-muted" aria-hidden="true" />
             </button>
             {menuOpen && (
@@ -125,7 +145,7 @@ export function TopNav({
                     KYC
                   </Link>
                   <div className="my-1 border-t border-line" />
-                  <form action={signOutAction}>
+                  <form action={onSignOut}>
                     <button
                       type="submit"
                       className="w-full text-left px-4 py-2 text-sm text-error hover:bg-surface"

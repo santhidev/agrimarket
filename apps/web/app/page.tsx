@@ -5,6 +5,7 @@ import { TopNav } from "@/app/components/layout/TopNav";
 import { Footer } from "@/app/components/layout/Footer";
 import { DemandCard, type Demand } from "@/app/components/cards/DemandCard";
 import { ProductCard, type Product } from "@/app/components/cards/ProductCard";
+import { getCurrentUser } from "@/app/lib/get-profile";
 
 const DEMANDS: Demand[] = [
   {
@@ -148,12 +149,15 @@ const WHY = [
   },
 ];
 
-// Marketing landing page — placeholder data (no DB rows yet). CTAs route to
-// /login because posting a demand requires auth.
-export default function HomePage() {
+// Marketing landing page — placeholder data (no DB rows yet). The primary CTA
+// routes to /demands/new for signed-in buyers, /login otherwise.
+export default async function HomePage() {
+  const current = await getCurrentUser();
+  const primaryHref = current ? "/demands/new" : "/login";
+
   return (
     <div className="bg-surface min-h-screen">
-      <TopNav />
+      <TopNav isLoggedIn={!!current} userName={current?.phone} userId={current?.id} />
 
       {/* Hero — calm, content-first. No gradient backdrop or stock overlay. */}
       <section className="border-b border-line">
@@ -173,7 +177,7 @@ export default function HomePage() {
               ไม่ต้องผ่านคนกลาง
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button href="/login" size="lg">
+              <Button href={primaryHref} size="lg">
                 <Plus size={18} aria-hidden="true" />
                 เริ่มประกาศรับซื้อ
               </Button>

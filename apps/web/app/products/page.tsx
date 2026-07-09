@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft, Package } from "lucide-react";
 import { createInsForgeServerClient } from "@/app/lib/insforge-server";
+import { getCurrentUser } from "@/app/lib/get-profile";
 import { TopNav } from "@/app/components/layout/TopNav";
 import { Footer } from "@/app/components/layout/Footer";
 import { ProductCard } from "@/app/components/cards/ProductCard";
@@ -16,6 +17,7 @@ import { PRODUCT_SELECT, GRADE_SELECT, type ProductRow, type ProductGradeRow } f
 // grades" acceptance criterion.
 export default async function ProductsPage() {
   const client = await createInsForgeServerClient();
+  const current = await getCurrentUser();
 
   const [{ data: productData, error: productError }, gradeResult] = await Promise.all([
     client.database
@@ -32,7 +34,7 @@ export default async function ProductsPage() {
   if (productError) {
     return (
       <div className="bg-surface min-h-screen">
-        <TopNav />
+        <TopNav isLoggedIn={!!current} userName={current?.phone} userId={current?.id} />
         <main className="max-w-6xl mx-auto px-4 md:px-8 py-16 text-center">
           <p className="text-error">ไม่สามารถโหลดรายการสินค้าได้</p>
         </main>
@@ -67,7 +69,7 @@ export default async function ProductsPage() {
 
   return (
     <div className="bg-surface min-h-screen flex flex-col">
-      <TopNav />
+      <TopNav isLoggedIn={!!current} userName={current?.phone} userId={current?.id} />
 
       <header className="bg-white border-b border-line">
         <div className="max-w-6xl mx-auto px-4 md:px-8 py-8 flex items-center gap-3">
