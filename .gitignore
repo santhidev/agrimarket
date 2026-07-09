@@ -71,3 +71,8 @@ pnpm-debug.log*
 
 # ZCode CLI artifacts (local tooling, not source)
 .zcode/
+
+# E2E (Issue 19)
+.auth/
+apps/web/test-results/
+apps/web/playwright-report/

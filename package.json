@@ -11,7 +11,8 @@
     "db:migrate": "pnpm --filter @agrimarket/database exec prisma migrate dev",
     "db:generate": "pnpm --filter @agrimarket/database exec prisma generate",
     "db:seed": "pnpm --filter @agrimarket/web seed",
-    "db:studio": "pnpm --filter @agrimarket/database exec prisma studio"
+    "db:studio": "pnpm --filter @agrimarket/database exec prisma studio",
+    "test:e2e": "pnpm --filter @agrimarket/web test:e2e"
   },
   "devDependencies": {
     "next": "^15.5.0",
