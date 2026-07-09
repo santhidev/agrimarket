@@ -9,6 +9,13 @@ jobs:
   e2e:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    env:
+      # NEXT_PUBLIC_* vars are inlined into the client bundle at BUILD time, so
+      # they must be present for both the build step and the server-start step.
+      # Hoisted to job-level env so both inherit them. INSFORGE_API_KEY is a
+      # server-only secret and stays on the steps that need it (not the build).
+      NEXT_PUBLIC_INSFORGE_URL: ${{ secrets.E2E_INSFORGE_URL }}
+      NEXT_PUBLIC_INSFORGE_ANON_KEY: ${{ secrets.E2E_INSFORGE_ANON_KEY }}
     steps:
       - uses: actions/checkout@v4
 
@@ -35,8 +42,6 @@ jobs:
         env:
           NODE_ENV: production
           PORT: 3000
-          NEXT_PUBLIC_INSFORGE_URL: ${{ secrets.E2E_INSFORGE_URL }}
-          NEXT_PUBLIC_INSFORGE_ANON_KEY: ${{ secrets.E2E_INSFORGE_ANON_KEY }}
           INSFORGE_API_KEY: ${{ secrets.E2E_INSFORGE_API_KEY }}
 
       - name: Wait for server
