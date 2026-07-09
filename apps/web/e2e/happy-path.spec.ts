@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, request as playwrightRequest } from "@playwright/test";
 import { TEST, PRODUCT_NAME, DEMAND } from "./fixtures/test-ids";
 
 // Happy-path E2E (Issue 19).
@@ -86,5 +86,73 @@ test("happy path: demand → offer → select → confirm → match → contacts
 
     // Referenced by later steps (offer select/match) — keep the linter calm.
     void offerId;
+  });
+
+  // --- Step 4: create a seller API context (seller's session) ---
+  // The test's `request` fixture is the buyer's session; create a separate
+  // APIRequestContext for the seller via the standalone request factory (the
+  // APIRequestContext fixture has no newContext method).
+  const sellerRequest = await playwrightRequest.newContext({
+    storageState: TEST.seller.storageState,
+    baseURL: process.env.E2E_BASE_URL ?? "http://localhost:3000",
+  });
+
+  // --- Step 5: seller submits an offer (API fallback — no UI button) ---
+  const gradeId = process.env.E2E_PRODUCT_GRADE_ID!;
+  await test.step("seller submits offer", async () => {
+    const readyDate = new Date(Date.now() + 3 * 86400000).toISOString();
+    const res = await sellerRequest.post(`/api/offers`, {
+      data: {
+        demandId,
+        productGradeId: gradeId,
+        pricePerUnit: 80,
+        quantity: 100,
+        photos: [],
+        pickupLat: 13.7563,
+        pickupLng: 100.5018,
+        readyDate,
+      },
+    });
+    expect(res.status()).toBe(201);
+    const json = await res.json();
+    offerId = json.offer.id;
+    expect(json.offer.status).toBe("ACTIVE");
+  });
+
+  // --- Step 6: buyer sees the offer + best-offer ---
+  await test.step("buyer sees offer + best-offer", async () => {
+    const res = await request.get(`/api/demands/${demandId}/offers`);
+    const json = await res.json();
+    expect(json.offers.length).toBeGreaterThanOrEqual(1);
+    const best = await request.post(`/api/demands/${demandId}/best-offer`, {
+      data: {},
+    });
+    expect(best.ok()).toBe(true);
+  });
+
+  // --- Step 7: buyer selects the offer (API fallback) ---
+  await test.step("buyer selects offer", async () => {
+    const res = await request.post(`/api/demands/${demandId}/select`, {
+      data: {
+        offers: [{ offerId, acceptedQuantity: 100 }],
+      },
+    });
+    expect(res.ok()).toBe(true);
+    // Verify the offer moved to PENDING_SELLER_CONFIRMATION. The buyer-facing
+    // GET /api/demands/:id/offers returns every offer on the buyer's demand with
+    // full status; GET /api/offers is seller-scoped (seller_id = auth.uid()) and
+    // would return nothing for the buyer.
+    const offerRes = await request.get(`/api/demands/${demandId}/offers`);
+    const offerJson = await offerRes.json();
+    const sel = offerJson.offers.find((o: { id: string }) => o.id === offerId);
+    expect(sel.status).toBe("PENDING_SELLER_CONFIRMATION");
+  });
+
+  // --- Step 8: seller confirms the sale (API fallback, seller session) ---
+  await test.step("seller confirms sale", async () => {
+    const res = await sellerRequest.post(`/api/offers/${offerId}/confirm-sale`);
+    expect(res.ok()).toBe(true);
+    const json = await res.json();
+    expect(json.offer.status).toBe("CONFIRMED");
   });
 });
