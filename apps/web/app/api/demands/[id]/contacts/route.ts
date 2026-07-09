@@ -70,14 +70,18 @@ export async function GET(
     );
   }
 
-  // Load MATCHED offers on this demand, joining the seller's phone. RLS already
-  // scopes the buyer to their own demand's offers, so the status filter is the
-  // only extra narrowing. accept_quantity carries the agreed quantity for each
-  // matched seller.
-  const { data: offerData, error: offerErr } = await client.database
+  // Load MATCHED offers on this demand, joining the seller's phone. The buyer-
+  // ownership + MATCHED gates above ran under the SSR client (RLS); the phone
+  // read itself uses the admin client because profiles RLS is owner-only
+  // (profiles_select_own_or_admin) — the buyer is NOT the seller, so the SSR
+  // join would return sellerPhone: null. The admin client bypasses RLS; the
+  // WHERE clause scopes it to this demand's MATCHED offers only.
+  const { createInsForgeAdminClient } = await import("@/app/lib/insforge-admin");
+  const admin = createInsForgeAdminClient();
+  const { data: offerData, error: offerErr } = await admin.database
     .from("offers")
     .select(
-      "id, seller_id, accepted_quantity, seller:profiles!offers_seller_id_fkey(phone)"
+      "id, seller_id, accepted_quantity, seller:profiles!offers_seller_profile_fkey(phone)"
     )
     .eq("demand_id", id)
     .eq("status", "MATCHED")

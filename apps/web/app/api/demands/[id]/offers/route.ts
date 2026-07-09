@@ -79,7 +79,7 @@ export async function GET(
   // seller's phone via profiles so the buyer can identify each seller.
   const { data: offerData, error: offerErr } = await client.database
     .from("offers")
-    .select(`${OFFER_SELECT}, seller:profiles!offers_seller_id_fkey(phone)`)
+    .select(`${OFFER_SELECT}, seller:profiles!offers_seller_profile_fkey(phone)`)
     .eq("demand_id", id)
     .order("created_at", { ascending: true });
 
